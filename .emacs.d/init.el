@@ -74,6 +74,12 @@
 ;; Hooks
 ;;;;
 
+(defun cider-loading-things ()
+  (interactive)
+  (cider-interactive-eval
+    "(use 'clojure.repl)
+     (use 'clojure.pprint)"))
+
 ;; company mode
 (if (fboundp 'company-mode)
     (add-hook 'after-init-hook 'global-company-mode))
@@ -81,8 +87,10 @@
 ;; paredit / eldoc in cider
 (if (fboundp 'cider-mode)
     (progn
+      (add-hook 'cider-mode-hook '(lambda () (cider-loading-things)))
       (add-hook 'cider-repl-mode-hook #'paredit-mode)
-      (add-hook 'cider-repl-mode-hook #'eldoc-mode)))
+      (add-hook 'cider-repl-mode-hook #'eldoc-mode)
+      (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)))
 
 ;; paredit / eldoc in clojure-mode
 (if (fboundp 'clojure-mode)
@@ -95,11 +103,10 @@
 (if (fboundp 'paredit-mode)
     (add-hook 'ielm-mode-hook #'paredit-mode))
 
-
 ;; paredit / eldoc in emacs lisp
+(add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
 (if (fboundp 'paredit-mode)
     (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
-(add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
 
 ;; rainbows!
 (if (fboundp 'rainbow-delimiters-mode)
