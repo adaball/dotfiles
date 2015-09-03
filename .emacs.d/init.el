@@ -26,6 +26,7 @@
 ;; UI
 ;;;;
 
+;; TODO detect if in GUI mode, zerodark looks like crap in terminal
 ;; set theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/vendor")
 (if (file-exists-p "~/.emacs.d/vendor/zerodark-theme.el")
@@ -48,10 +49,11 @@
 ;; set font-face to 12
 (set-face-attribute 'default nil :height 140)
 
+;; TODO needs to be a better way to do this
 ;; get rid of toolbar, scrollbar, and menubar
-(tool-bar-mode -1)
-(scroll-bar-mode -1)
-(menu-bar-mode -1)
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
 
 ;;;;
 ;; Editing
