@@ -1,8 +1,11 @@
+execute pathogen#infect()
 syntax on
-set bs=2
+filetype plugin indent on
 
-"" map <F5> :w \| :! ./% <CR>
+syntax on
+set backspace=2
+set tabstop=2
+set shiftwidth=2 
+
 colorscheme elflord
 
-autocmd Filetype ruby setlocal ts=2 sts=2 sw=2
-autocmd Filetype ruby map <F5> :w \| :! ruby % <CR>
