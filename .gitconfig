@@ -1,0 +1,5 @@
+[user]
+	email = etc@adamball.org
+	name = Adam Ball
+[core]
+	autocrlf = false
