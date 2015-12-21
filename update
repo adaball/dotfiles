@@ -1,5 +1,11 @@
 #!/bin/bash
 
+mkdir -p ~/.emacs.d
+mkdir -p ~/.vim
+mkdir -p ~/.vim/autoload
+mkdir -p ~/.vim/bundle
+mkdir -p ~/.vim/swap
+
 cp -uiv .bashrc ~
 cp -uiv .vimrc ~
 cp -ruiv .vim/ ~

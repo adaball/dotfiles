@@ -10,6 +10,8 @@ filetype plugin indent on
 " vim-ruby - https://github.com/vim-ruby/vim-ruby
 " vim-sensible - https://github.com/tpope/vim-sensible
 
+set directory=~/.vim/swap//
+
 " tabs and whatnot
 set backspace=2
 set tabstop=2
