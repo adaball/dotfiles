@@ -1,0 +1,7 @@
+#!/bin/bash
+
+cp -uiv .bashrc ~
+cp -uiv .vimrc ~
+cp -ruiv .vim/ ~
+cp -ruiv .emacs.d/ ~
+cp -uiv .gitconfig ~
