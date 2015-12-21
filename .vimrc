@@ -2,6 +2,12 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
+" plugins
+" nerdtree - https://github.com/scrooloose/nerdtree
+" vim-pathogen - https://github.com/tpope/vim-pathogen
+" vim-ruby - https://github.com/vim-ruby/vim-ruby
+" vim-sensible - https://github.com/tpope/vim-sensible
+
 " tabs and whatnot
 set backspace=2
 set tabstop=2
