@@ -4,7 +4,9 @@ filetype plugin indent on
 
 " plugins
 " nerdtree - https://github.com/scrooloose/nerdtree
+" vim-dispatch - https://github.com/tpope/vim-dispatch
 " vim-pathogen - https://github.com/tpope/vim-pathogen
+" vim-rspec - https://github.com/thoughtbot/vim-rspec
 " vim-ruby - https://github.com/vim-ruby/vim-ruby
 " vim-sensible - https://github.com/tpope/vim-sensible
 
