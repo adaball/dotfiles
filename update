@@ -11,3 +11,12 @@ cp -uiv .vimrc ~
 cp -ruiv .vim/ ~
 cp -ruiv .emacs.d/ ~
 cp -uiv .gitconfig ~
+
+cd ~/.vim/bundle
+
+# this is hacky and assumes you have git, but w/e
+git clone https://github.com/scrooloose/nerdtree
+git clone https://github.com/tpope/vim-dispatch
+git clone https://github.com/thoughtbot/vim-rspec
+git clone https://github.com/vim-ruby/vim-ruby
+git clone https://github.com/tpope/vim-sensible
