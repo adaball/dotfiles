@@ -1,7 +1,8 @@
-;; proxy
-(setq url-proxy-services
-      '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-        (getenv "http_proxy")))
+;; override custom file
+(setq custom-file "~/.emacs.d/custom.el")
+(if (not (file-exists-p custom-file))
+    (write-region "" nil custom-file))
+(load custom-file)
 
 ;;;;
 ;; Packages
@@ -26,13 +27,14 @@
 ;; UI
 ;;;;
 
-;; TODO detect if in GUI mode, zerodark looks like crap in terminal
-;; set theme
-(add-to-list 'custom-theme-load-path "~/.emacs.d/vendor")
-(if (file-exists-p "~/.emacs.d/vendor/zerodark-theme.el")
-    (load-theme 'zerodark t)
-  (load-theme 'wombat))
+;; don't show the welcome message
+(setq inhibit-startup-message t)
 
+;; use visual indication instead of system bell
+(setq visible-bell 1)
+
+;; load wombat theme
+(load-theme 'wombat)
 
 ;; matching parens highlight
 (show-paren-mode 1)
@@ -46,10 +48,9 @@
 ;; full path in title bar
 (setq-default frame-title-format "%b (%f)")
 
-;; set font-face to 12
-(set-face-attribute 'default nil :height 140)
+;; set font-face to 10
+(set-face-attribute 'default nil :height 100)
 
-;; TODO needs to be a better way to do this
 ;; get rid of toolbar, scrollbar, and menubar
 (if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
 (if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
@@ -65,22 +66,9 @@
 ;; no electric-indent
 (setq electric-indent-mode nil)
 
-;; comments
-(defun toggle-comment-on-line ()
-  "comment or uncomment current line"
-  (interactive)
-  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
-(global-set-key (kbd "C-?") 'toggle-comment-on-line)
-
 ;;;;
-;; Hooks
+;; Mode Hooks
 ;;;;
-
-(defun cider-loading-things ()
-  (interactive)
-  (cider-interactive-eval
-    "(use 'clojure.repl)
-     (use 'clojure.pprint)"))
 
 ;; company mode
 (if (fboundp 'company-mode)
@@ -115,39 +103,52 @@
     (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 ;;;;
+;; Cider / nRepl specific
+;;;;
+
+(if (fboundp 'cider-mode)
+    (progn
+      (setq cider-prompt-save-file-on-load nil)
+      (setq nrepl-hide-special-buffers t)
+      (setq cider-repl-result-prefix ";; => ")
+      (global-set-key (kbd "C-1") 'cider-repl-clear-buffer)))
+
+;;;;
 ;; Misc
 ;;;;
+
+;; link win (super) key to meta
+(setq x-super-keysym 'meta)
 
 ;; don't use backup files
 (setq make-backup-files nil)
 
-;; don't show the welcome message
-(setq inhibit-startup-message t)
-
 ;; use y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
-;; replace tabs with spaces
+;;;;
+;; Custom Functions
+;;;;
+
 (defun replace-tabs ()
+  "replace tabs with spaces"
   (interactive)
   (set-variable 'tab-width 2)
   (mark-whole-buffer)
   (untabify (region-beginning) (region-end))
   (keyboard-quit))
 
-;; re-indent whole buffer
 (defun fix-format ()
+  "re-indent entire buffer"
   (interactive)
   (mark-whole-buffer)
   (indent-region (region-beginning) (region-end))
   (keyboard-quit))
 
+(defun toggle-comment-on-line ()
+  "comment or uncomment current line"
+  (interactive)
+  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 
-;;;;
-;; Cider / nRepl
-;;;;
-
-(setq cider-prompt-save-file-on-load nil)
-(setq nrepl-hide-special-buffers t)
-(setq cider-repl-result-prefix ";; => ")
-
+;; comment line with Ctrl-Shift-/
+(global-set-key (kbd "C-?") 'toggle-comment-on-line)
