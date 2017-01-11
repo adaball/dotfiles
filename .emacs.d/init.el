@@ -27,6 +27,10 @@
 ;; UI
 ;;;;
 
+;; mouse scrolling fix, smoother, by 2 lines at a time
+(setq mouse-wheel-scroll-amount '(2 ((shift) . 2) ((control) . nil)))
+(setq mouse-wheel-progressive-speed nil)
+
 ;; don't show the welcome message
 (setq inhibit-startup-message t)
 
