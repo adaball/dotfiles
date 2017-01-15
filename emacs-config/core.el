@@ -16,11 +16,17 @@
 ;; misc package installation
 (require 'ec-misc-imports)
 
+;; clojure specific settings
+(require 'ec-clojure)
+
 ;; emacs lisp specific settings
 (require 'ec-elisp)
 
-;; clojure specific settings
-(require 'ec-clojure)
+;; javascript specific settings
+(require 'ec-javascript)
+
+;; ruby specific settings
+(require 'ec-ruby)
 
 ;; emacs env settings
 (require 'ec-env-settings)
