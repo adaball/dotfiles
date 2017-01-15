@@ -6,12 +6,12 @@ mkdir -p ~/.vim/bundle
 mkdir -p ~/.vim/colors
 mkdir -p ~/.vim/swap
 
-cp -uiv ./.bashrc ~/
-cp -uiv ./.emacs ~/
-cp -uiv ./.vimrc ~/
-cp -uiv ./.gitconfig ~/
-cp -uiv ./.vim/colors/minimalist.vim ~/.vim/colors/
-cp -ruiv ./emacs-config ~/
+cp -iv ./.bashrc ~/
+cp -iv ./.emacs ~/
+cp -iv ./.vimrc ~/
+cp -iv ./.gitconfig ~/
+cp -iv ./.vim/colors/minimalist.vim ~/.vim/colors/
+cp -riv ./emacs-config ~/
 
 cd ~/.vim/autoload
 curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"

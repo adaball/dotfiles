@@ -1,5 +1,8 @@
 ;; emacs environment settings
 
+;; add user's bin to exec path
+(add-to-list 'exec-path "~/bin/")
+
 ;; don't use backup files
 (setq make-backup-files nil)
 
