@@ -1,22 +1,21 @@
 #!/bin/bash
 
-mkdir -p ~/.emacs.d
 mkdir -p ~/.vim
 mkdir -p ~/.vim/autoload
 mkdir -p ~/.vim/bundle
+mkdir -p ~/.vim/colors
 mkdir -p ~/.vim/swap
 
-cp -uiv .bashrc ~
-cp -uiv .vimrc ~
-cp -ruiv .vim/ ~
-cp -ruiv .emacs.d/ ~
-cp -uiv .gitconfig ~
+cp -uiv ./.bashrc ~/
+cp -uiv ./.emacs ~/
+cp -uiv ./.vimrc ~/
+cp -uiv ./.gitconfig ~/
+cp -uiv ./.vim/colors/minimalist.vim ~/.vim/colors/
+cp -ruiv ./emacs-config ~/
+
+cd ~/.vim/autoload
+curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
 
 cd ~/.vim/bundle
-
-# this is hacky and assumes you have git, but w/e
 git clone https://github.com/scrooloose/nerdtree
-git clone https://github.com/tpope/vim-dispatch
-git clone https://github.com/thoughtbot/vim-rspec
-git clone https://github.com/vim-ruby/vim-ruby
 git clone https://github.com/tpope/vim-sensible

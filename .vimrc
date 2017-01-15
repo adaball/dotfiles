@@ -2,25 +2,14 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
-" plugins
-" nerdtree - https://github.com/scrooloose/nerdtree
-" vim-dispatch - https://github.com/tpope/vim-dispatch
-" vim-pathogen - https://github.com/tpope/vim-pathogen
-" vim-rspec - https://github.com/thoughtbot/vim-rspec
-" vim-ruby - https://github.com/vim-ruby/vim-ruby
-" vim-sensible - https://github.com/tpope/vim-sensible
+colorscheme minimalist
 
-set directory=~/.vim/swap//
-
-" tabs and whatnot
 set backspace=2
-set tabstop=2
-set shiftwidth=2
+set directory=~/.vim/swap//
 set expandtab
-
-" look and feel
-colorscheme elflord
 set nu
+set shiftwidth=2
+set tabstop=2
 
 " movement between panes, C-J|K|H|L
 nnoremap <C-J> <C-W>j
@@ -28,17 +17,7 @@ nnoremap <C-K> <C-W>k
 nnoremap <C-H> <C-W>h
 nnoremap <C-L> <C-W>l
 
-" <Leader> key re-bind
-let mapleader=","
-
 " NERDTree
 map <C-N> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
 
-" RSpec and Dispatch
-nnoremap <Leader>t :call RunCurrentSpecFile()<CR>
-nnoremap <Leader>s :call RunNearestSpec()<CR>
-nnoremap <Leader>l :call RunLastSpec()<CR>
-nnoremap <Leader>a :call RunAllSpecs()<CR>
-
-let g:rspec_command = "Dispatch rspec {spec}"
