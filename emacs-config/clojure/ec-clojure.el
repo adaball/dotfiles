@@ -21,4 +21,8 @@
 (setq nrepl-hide-special-buffers t)
 (setq cider-repl-result-prefix ";; => ")
 
+(eval-after-load 'cider-repl
+  '(define-key cider-repl-mode-map
+     (kbd "C-1") 'cider-repl-clear-buffer))
+
 (provide 'ec-clojure)
