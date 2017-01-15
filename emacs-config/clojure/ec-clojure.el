@@ -16,10 +16,9 @@
 (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
 
-;; cider settings and key-bindings
+;; cider settings
 (setq cider-prompt-save-file-on-load nil)
 (setq nrepl-hide-special-buffers t)
 (setq cider-repl-result-prefix ";; => ")
-
 
 (provide 'ec-clojure)
