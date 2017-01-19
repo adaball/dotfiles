@@ -1,9 +1,12 @@
 ;; core configuration loading file
 ;; configuration file layout heavily influenced by https://github.com/awood45/emacs
 
+(add-to-list 'load-path "/usr/local/bin")
+
 (add-to-list 'load-path "~/emacs-config/")
 (add-to-list 'load-path "~/emacs-config/clojure")
 (add-to-list 'load-path "~/emacs-config/elisp")
+(add-to-list 'load-path "~/emacs-config/java")
 (add-to-list 'load-path "~/emacs-config/js")
 (add-to-list 'load-path "~/emacs-config/ruby")
 
@@ -16,16 +19,11 @@
 ;; misc package installation
 (require 'ec-misc-imports)
 
-;; clojure specific settings
+;; language specific settings
 (require 'ec-clojure)
-
-;; emacs lisp specific settings
 (require 'ec-elisp)
-
-;; javascript specific settings
+(require 'ec-java)
 (require 'ec-javascript)
-
-;; ruby specific settings
 (require 'ec-ruby)
 
 ;; emacs env settings

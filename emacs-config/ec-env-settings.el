@@ -52,8 +52,8 @@
 ;; full path in title bar
 (setq-default frame-title-format "%b (%f)")
 
-;; set font-face to 10
-(set-face-attribute 'default nil :height 100)
+;; set font-face to 12
+(set-face-attribute 'default nil :height 120)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
