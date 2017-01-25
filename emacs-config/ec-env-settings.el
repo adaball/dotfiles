@@ -34,8 +34,14 @@
 ;; don't show the welcome message
 (setq inhibit-startup-message t)
 
-;; use visual indication instead of system bell
-(setq visible-bell 1)
+;; global highlight lines
+(custom-set-faces
+ '(hl-line ((t (:inherit highlight :underline nil)))))
+(global-hl-line-mode 1)
+
+;; use friendlier visual bell
+(setq visible-bell nil)
+(setq ring-bell-function #'friendlier-visible-bell)
 
 ;; load wombat theme
 (load-theme 'wombat)
