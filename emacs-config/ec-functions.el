@@ -32,6 +32,7 @@
   (run-with-timer 0.1 nil 'invert-face 'mode-line))
 
 (defun delete-process-interactive ()
+  "delete process using an ido-read buffer (http://stackoverflow.com/questions/11572934/how-do-i-kill-a-running-process-in-emacs#11573495)"
   (interactive)
   (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
     (delete-process (get-process pname))))
