@@ -36,7 +36,7 @@
 
 ;; global highlight lines
 (custom-set-faces
- '(hl-line ((t (:inherit highlight :underline nil)))))
+ '(hl-line ((t (:background "#333333")))))
 (global-hl-line-mode 1)
 
 ;; use friendlier visual bell

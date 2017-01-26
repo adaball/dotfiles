@@ -27,8 +27,13 @@
     (package-install package)))
 
 (defun friendlier-visible-bell ()
-   "A friendlier visual bell effect. (https://www.emacswiki.org/emacs/AlarmBell#toc8)"
-   (invert-face 'mode-line)
-   (run-with-timer 0.1 nil 'invert-face 'mode-line))
+  "A friendlier visual bell effect. (https://www.emacswiki.org/emacs/AlarmBell#toc8)"
+  (invert-face 'mode-line)
+  (run-with-timer 0.1 nil 'invert-face 'mode-line))
+
+(defun delete-process-interactive ()
+  (interactive)
+  (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
+    (delete-process (get-process pname))))
 
 (provide 'ec-functions)
