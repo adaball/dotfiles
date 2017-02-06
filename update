@@ -11,6 +11,7 @@ cp -iv ./.emacs ~/
 cp -iv ./.vimrc ~/
 cp -iv ./.gitconfig ~/
 cp -iv ./.vim/colors/minimalist.vim ~/.vim/colors/
+cp -iv ./.vim/colors/chroma.vim ~/.vim/colors/
 cp -riv ./emacs-config ~/
 
 cd ~/.vim/autoload

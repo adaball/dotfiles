@@ -2,7 +2,7 @@ execute pathogen#infect()
 syntax on
 filetype plugin indent on
 
-colorscheme minimalist
+colorscheme chroma
 
 set backspace=2
 set directory=~/.vim/swap//
