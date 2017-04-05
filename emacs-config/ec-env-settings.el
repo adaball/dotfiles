@@ -6,6 +6,10 @@
 ;; don't use backup files
 (setq make-backup-files nil)
 
+;; set the initial mode and nix the scratch message
+(setq initial-major-mode 'fundamental-mode)
+(setq initial-scratch-message nil)
+
 ;; use y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
 
