@@ -17,6 +17,10 @@
 (install-package-if-missing 'markdown-mode)
 (require 'markdown-mode)
 
+;; vimrc mode
+(install-package-if-missing 'vimrc-mode)
+(require 'vimrc-mode)
+
 ;; web mode
 (install-package-if-missing 'web-mode)
 (require 'web-mode)
