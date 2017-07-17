@@ -47,9 +47,6 @@
 (setq visible-bell nil)
 (setq ring-bell-function #'friendlier-visible-bell)
 
-;; load wombat theme
-(load-theme 'wombat)
-
 ;; matching parens highlight
 (show-paren-mode 1)
 
@@ -62,7 +59,7 @@
 ;; full path in title bar
 (setq-default frame-title-format "%b (%f)")
 
-;; set font-face to 12
+;; set font-face to 16
 (set-face-attribute 'default nil :height 160)
 
 ;; override custom file
