@@ -35,8 +35,8 @@
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
-;; base-16 themes
+;; base16 themes
 (install-package-if-missing 'base16-theme)
-(load-theme 'base-16-ashes t)
+(load-theme 'base16-ashes t)
 
 (provide 'ec-misc-imports)
