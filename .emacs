@@ -59,6 +59,10 @@
 ;; load packages / install if missing
 ;;;;
 
+;; golden-ratio
+(amb/install-package-if-missing 'golden-ratio)
+(require 'golden-ratio)
+
 ;; paredit
 (amb/install-package-if-missing 'paredit)
 (require 'paredit)
