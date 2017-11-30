@@ -1,50 +1,9 @@
-(add-to-list 'load-path "/usr/local/bin")
-(add-to-list 'exec-path "~/bin/")
-
-;;;;
-;; utility functions
-;;;;
-
-(defun amb/replace-tabs ()
-  "replace tabs with spaces"
-  (interactive)
-  (set-variable 'tab-width 2)
-  (mark-whole-buffer)
-  (untabify (region-beginning) (region-end))
-  (keyboard-quit))
-
-(defun amb/fix-format ()
-  "re-indent entire buffer"
-  (interactive)
-  (mark-whole-buffer)
-  (indent-region (region-beginning) (region-end))
-  (keyboard-quit))
-
-(defun amb/toggle-comment-on-line ()
-  "comment or uncomment current line"
-  (interactive)
-  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
-
-(defun amb/install-package-if-missing (package)
-  "perform package installation if package is missing"
-  (unless (package-installed-p package)
-    (package-refresh-contents)
-    (package-install package)))
-
-(defun amb/friendlier-visible-bell ()
-  "A friendlier visual bell effect. (https://www.emacswiki.org/emacs/AlarmBell#toc8)"
-  (invert-face 'mode-line)
-  (run-with-timer 0.1 nil 'invert-face 'mode-line))
-
-(defun amb/delete-process-interactive ()
-  "delete process using an ido-read buffer (http://stackoverflow.com/questions/11572934/how-do-i-kill-a-running-process-in-emacs#11573495)"
-  (interactive)
-  (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
-    (delete-process (get-process pname))))
+;; emacs config file
 
 ;;;;
 ;; initialize package installation logic
 ;;;;
+
 (require 'package)
 
 (add-to-list 'package-archives
@@ -56,123 +15,102 @@
 (package-initialize)
 
 ;;;;
-;; load packages / install if missing
+;; utility functions
 ;;;;
 
-;; golden-ratio
-(amb/install-package-if-missing 'golden-ratio)
-(require 'golden-ratio)
+(defun util/replace-tabs ()
+  "replace tabs with spaces"
+  (interactive)
+  (set-variable 'tab-width 2)
+  (mark-whole-buffer)
+  (untabify (region-beginning) (region-end))
+  (keyboard-quit))
 
-;; paredit
-(amb/install-package-if-missing 'paredit)
-(require 'paredit)
+(defun util/fix-format ()
+  "re-indent entire buffer"
+  (interactive)
+  (mark-whole-buffer)
+  (indent-region (region-beginning) (region-end))
+  (keyboard-quit))
 
-;; magit
-(amb/install-package-if-missing 'magit)
-(require 'magit)
+(defun util/toggle-comment-on-line ()
+  "comment or uncomment current line"
+  (interactive)
+  (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 
-;; rainbows!
-(amb/install-package-if-missing 'rainbow-delimiters)
-(require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+(defun util/install-package-if-missing (package)
+  "perform package installation if package is missing"
+  (unless (package-installed-p package)
+    (package-refresh-contents)
+    (package-install package)))
 
-;; markdown mode
-(amb/install-package-if-missing 'markdown-mode)
-(require 'markdown-mode)
+(defun util/friendlier-visible-bell ()
+  "A friendlier visual bell effect. (https://www.emacswiki.org/emacs/AlarmBell#toc8)"
+  (invert-face 'mode-line)
+  (run-with-timer 0.1 nil 'invert-face 'mode-line))
 
-;; vimrc mode
-(amb/install-package-if-missing 'vimrc-mode)
-(require 'vimrc-mode)
+(defun util/delete-process-interactive ()
+  "delete process using an ido-read buffer (http://stackoverflow.com/questions/11572934/how-do-i-kill-a-running-process-in-emacs#11573495)"
+  (interactive)
+  (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
+    (delete-process (get-process pname))))
 
-;; web mode
-(amb/install-package-if-missing 'web-mode)
-(require 'web-mode)
-(setq web-mode-code-indent-offset 2)
+;;;;
+;; install packages
+;;;;
 
-;; regex builder
-(require 're-builder)
-(setq reb-re-syntax 'string)
+(util/install-package-if-missing 'base16-theme)
+(util/install-package-if-missing 'cider)
+(util/install-package-if-missing 'clojure-mode)
+(util/install-package-if-missing 'clojure-mode-extra-font-locking)
+(util/install-package-if-missing 'company)
+(util/install-package-if-missing 'evil)
+(util/install-package-if-missing 'json-mode)
+(util/install-package-if-missing 'magit)
+(util/install-package-if-missing 'markdown-mode)
+(util/install-package-if-missing 'midje-mode)
+(util/install-package-if-missing 'paredit)
+(util/install-package-if-missing 'rainbow-delimiters)
 
-;; company mode
-(amb/install-package-if-missing 'company)
+;;;;
+;; requires / hooks / init
+;;;;
+
 (require 'company)
-(add-hook 'after-init-hook 'global-company-mode)
+(require 'evil)
+(require 'json-mode)
+(require 'magit)
+(require 'markdown-mode)
+(require 'paredit)
+(require 'rainbow-delimiters)
+(require 'uniquify)
 
-;; evil mode
-(amb/install-package-if-missing 'evil)
 (evil-mode 1)
 
-;; base16 themes
-(amb/install-package-if-missing 'base16-theme)
-(load-theme 'base16-ashes t)
-
-;;;;
-;; Clojure specific
-;;;;
-
-;; clojure mode
-(amb/install-package-if-missing 'clojure-mode)
-(amb/install-package-if-missing 'clojure-mode-extra-font-locking)
-
-;; clojure mode hooks
-(add-hook 'clojure-mode-hook #'paredit-mode)
-(add-hook 'clojure-mode-hook #'eldoc-mode)
-
-;; midje-mode
-(amb/install-package-if-missing 'midje-mode)
-
-;; cider
-(amb/install-package-if-missing 'cider)
-
-;; cider hooks
-(add-hook 'cider-repl-mode-hook #'paredit-mode)
+(add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'cider-repl-mode-hook #'eldoc-mode)
-(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
 (add-hook 'cider-repl-mode-hook #'midje-mode)
-
-;; cider settings
-(setq cider-prompt-save-file-on-load nil)
-(setq nrepl-hide-special-buffers t)
-(setq cider-repl-result-prefix ";; => ")
-
-;; clear Cider's repl buffer with Ctrl+1
-(eval-after-load 'cider-repl
-  '(define-key cider-repl-mode-map
-     (kbd "C-1") 'cider-repl-clear-buffer))
-
-;;;;
-;; Emacs Lisp specific
-;;;;
-
-;; paredit / eldoc in ielm
-(add-hook 'ielm-mode-hook #'eldoc-mode)
-(if (fboundp 'paredit-mode)
-    (add-hook 'ielm-mode-hook #'paredit-mode))
-
-;; paredit / eldoc in emacs lisp
+(add-hook 'cider-repl-mode-hook #'paredit-mode)
+(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook #'eldoc-mode)
+(add-hook 'clojure-mode-hook #'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-(if (fboundp 'paredit-mode)
-    (add-hook 'emacs-lisp-mode-hook #'paredit-mode))
+(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
+(add-hook 'ielm-mode-hook #'eldoc-mode)
+(add-hook 'ielm-mode-hook #'paredit-mode)
+(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
-;;;;
-;; JavaScript specific
-;;;;
+(setq cider-prompt-save-file-on-load nil)
+(setq cider-repl-result-prefix ";; => ")
+(setq nrepl-hide-special-buffers t)
 
-;; json mode
-(amb/install-package-if-missing 'json-mode)
-(require 'json-mode)
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 
-;; js ide mode
-(amb/install-package-if-missing 'js2-mode)
-(require 'js2-mode)
-(add-to-list 'auto-mode-alist '("\\.js$" . js2-mode))
-(setq js2-bounce-indent-p t)
-(setq js2-basic-offset 2)
+;;;;
+;; emacs general / ui settings
+;;;;
 
-;;;;
-;; Emacs environment settings
-;;;;
+(load-theme 'base16-ashes t)
 
 ;; don't use backup files
 (setq make-backup-files nil)
@@ -199,7 +137,6 @@
 (column-number-mode t)
 
 ;; better handling of duplicate named files
-(require 'uniquify)
 (setq uniquify-buffer-name-style 'forward)
 
 ;; mouse scrolling fix
@@ -216,7 +153,7 @@
 
 ;; use friendlier visual bell
 (setq visible-bell nil)
-(setq ring-bell-function #'amb/friendlier-visible-bell)
+(setq ring-bell-function #'util/friendlier-visible-bell)
 
 ;; matching parens highlight
 (show-paren-mode 1)
@@ -239,18 +176,23 @@
     (write-region "" nil custom-file))
 (load custom-file)
 
-;;;;
-;; Global key bindings
-;;;;
+(add-to-list 'load-path "/usr/local/bin")
+(add-to-list 'exec-path "~/bin/")
 
-;; Link win (super) key to meta
-(setq x-super-keysym 'meta)
+;;;;
+;; key bindings
+;;;;
 
 ;; fix format of buffer
-(global-set-key (kbd "C-c C-f") 'amb/fix-format)
+(global-set-key (kbd "C-c C-f") 'util/fix-format)
 
 ;; comment line with Ctrl-Shift-/
-(global-set-key (kbd "C-?") 'amb/toggle-comment-on-line)
+(global-set-key (kbd "C-?") 'util/toggle-comment-on-line)
 
 ;; magit status for the current buffer
 (global-set-key (kbd "C-x g") 'magit-status)
+
+;; clear Cider's repl buffer with Ctrl+1
+(eval-after-load 'cider-repl
+  '(define-key cider-repl-mode-map
+     (kbd "C-1") 'cider-repl-clear-buffer))
