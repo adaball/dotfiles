@@ -100,6 +100,12 @@
 (add-hook 'ielm-mode-hook #'paredit-mode)
 (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
 
+;; normal <delete> key binding in paredit
+(eval-after-load 'paredit
+  '(progn
+     (define-key paredit-mode-map (kbd "<delete>")
+       nil)))
+
 (setq cider-prompt-save-file-on-load nil)
 (setq cider-repl-result-prefix ";; => ")
 (setq nrepl-hide-special-buffers t)
@@ -167,8 +173,8 @@
 ;; full path in title bar
 (setq-default frame-title-format "%b (%f)")
 
-;; set font-face to 16
-(set-face-attribute 'default nil :height 160)
+;; set font height
+(set-face-attribute 'default nil :height 120)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
