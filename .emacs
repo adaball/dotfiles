@@ -71,6 +71,8 @@
 (util/install-package-if-missing 'midje-mode)
 (util/install-package-if-missing 'paredit)
 (util/install-package-if-missing 'rainbow-delimiters)
+(util/install-package-if-missing 'sql-indent)
+(util/install-package-if-missing 'wiki-summary)
 
 ;;;;
 ;; requires / hooks / init
@@ -105,6 +107,13 @@
   '(progn
      (define-key paredit-mode-map (kbd "<delete>")
        nil)))
+
+;; load sql-indent
+(eval-after-load "sql"
+  '(load-library "sql-indent"))
+
+;; disable evil mode in cider-repl
+(evil-set-initial-state 'cider-repl-mode 'emacs)
 
 (setq cider-prompt-save-file-on-load nil)
 (setq cider-repl-result-prefix ";; => ")
@@ -174,7 +183,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set font height
-(set-face-attribute 'default nil :height 120)
+(set-face-attribute 'default nil :height 160)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
