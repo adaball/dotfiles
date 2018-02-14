@@ -185,6 +185,10 @@
 ;; set font height
 (set-face-attribute 'default nil :height 160)
 
+;; set font face to Monaco if on macOS
+(if (string= system-type "darwin")
+    (set-frame-font "Monaco" nil t))
+
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
 (if (not (file-exists-p custom-file))
