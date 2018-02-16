@@ -55,6 +55,12 @@
   (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
     (delete-process (get-process pname))))
 
+(defun util/change-font-height ()
+  "interactively change font height attribute"
+  (interactive)
+  (let ((updated-height (read-from-minibuffer (format "Enter new height (current is %d): " (face-attribute 'default :height)))))
+    (set-face-attribute 'default nil :height (string-to-number updated-height))))
+
 ;;;;
 ;; install packages
 ;;;;
