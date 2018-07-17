@@ -10,6 +10,7 @@ set expandtab
 set nu
 set shiftwidth=2
 set tabstop=2
+set spell spelllang=en_us
 
 " movement between panes, C-J|K|H|L
 nnoremap <C-J> <C-W>j
