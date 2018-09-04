@@ -1,8 +1,11 @@
 execute pathogen#infect()
+execute pathogen#helptags()
 syntax on
 filetype plugin indent on
 
-colorscheme desert
+if !empty(glob("~/.vim/colors/base16-brewer.vim"))
+  colorscheme base16-brewer
+endif
 
 set backspace=2
 set expandtab
@@ -24,14 +27,14 @@ let &directory = vimfiles_dir . '.swap'
 let &dir = &directory
 
 if has('gui_running')
-  set guifont=Consolas:h12
+  set guifont=Consolas:h14
 endif
 
 " movement between panes, C-J|K|H|L
-nnoremap <C-J> <C-W>j
-nnoremap <C-K> <C-W>k
-nnoremap <C-H> <C-W>h
-nnoremap <C-L> <C-W>l
+nmap <C-J> <C-W>j
+nmap <C-K> <C-W>k
+nmap <C-H> <C-W>h
+nmap <C-L> <C-W>l
 
 " NERDTree
 map <C-N> :NERDTreeToggle<CR>
