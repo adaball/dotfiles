@@ -4,7 +4,9 @@ mkdir -p ~/.vim
 mkdir -p ~/.vim/autoload
 mkdir -p ~/.vim/bundle
 mkdir -p ~/.vim/colors
-mkdir -p ~/.vim/swap
+mkdir -p ~/.vim/.swap
+mkdir -p ~/.vim/.backup
+mkdir -p ~/.vim/.undo
 mkdir -p ~/.mintty/themes
 
 cp -iv ./.bashrc ~/
@@ -12,7 +14,7 @@ cp -iv ./.emacs ~/
 cp -iv ./.vimrc ~/
 cp -iv ./.gitconfig ~/
 cp -iv ./.tmux.conf ~/
-cp -iv ./mintty/themes/base16-brewer.minttyrc ~/.mintty/themes/
+cp -iv ./.mintty/themes/base16-brewer.minttyrc ~/.mintty/themes/
 cp -iv ~/.vim/colors/base16-brewer.vim ~/.vim/colors/
 
 pushd ~/.vim/autoload
@@ -20,8 +22,8 @@ curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/p
 popd
 
 pushd ~/.vim/bundle
-git clone https://github.com/scrooloose/nerdtree
-git clone https://github.com/guns/vim-clojure-static
-git clone https://github.com/tpope/fireplace
-git clone https://github.com/tpope/vim-sensible
+git clone git@github.com:scrooloose/nerdtree.git
+git clone git@github.com:guns/vim-clojure-static.git
+git clone git@github.com:tpope/fireplace.git
+git clone git@github.com:tpope/vim-sensible.git
 popd
