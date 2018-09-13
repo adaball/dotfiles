@@ -22,8 +22,10 @@ curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/p
 popd
 
 pushd ~/.vim/bundle
+git clone git@github.com:tpope/vim-sensible.git
 git clone git@github.com:scrooloose/nerdtree.git
 git clone git@github.com:guns/vim-clojure-static.git
 git clone git@github.com:tpope/vim-fireplace.git
-git clone git@github.com:tpope/vim-sensible.git
+git clone git@github.com:pangloss/vim-javascript.git
+git clone git@github.com:jwalton512/vim-blade.git
 popd
