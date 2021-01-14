@@ -21,11 +21,30 @@ curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/p
 popd
 
 pushd ~/.vim/bundle
-git clone git@github.com:guns/vim-clojure-static.git
-git clone git@github.com:jwalton512/vim-blade.git
-git clone git@github.com:pangloss/vim-javascript.git
+# Cypher syntax
+git clone git@github.com:simpsonjulian/cypher-vim-syntax.git
+
+# NerdTree
 git clone git@github.com:scrooloose/nerdtree.git
+
+# SPARQL syntax
+git clone git@github.com:vim-scripts/sparql.vim.git
+
+# TypeScript syntax
+git clone git@github.com:leafgarland/typescript-vim.git
+
+# Clojure support
+git clone git@github.com:guns/vim-clojure-static.git
+
+# Clojure nrepl support
 git clone git@github.com:tpope/vim-fireplace.git
+
+# Javascript syntax and indentation
+git clone git@github.com:pangloss/vim-javascript.git
+
+# JSX support
+git clone git@github.com:MaxMEllon/vim-jsx-pretty.git
+
+# sensible Vim defaults
 git clone git@github.com:tpope/vim-sensible.git
-git clone git@github.com:jpalardy/vim-slime.git
 popd
