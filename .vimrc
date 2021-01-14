@@ -5,11 +5,13 @@ filetype plugin indent on
 
 set backspace=2
 set expandtab
+set hlsearch
 set nu
 set shiftwidth=2
 set tabstop=2
 
 au BufNewFile,BufRead *.localbashrc setlocal ft=sh
+colorscheme elflord
 
 let vimfiles_dir = $HOME . "/.vim/"
 
@@ -32,12 +34,12 @@ nmap <C-K> <C-W>k
 nmap <C-H> <C-W>h
 nmap <C-L> <C-W>l
 
+" insert actual tab char when needed
+inoremap <S-Tab> <C-V><Tab>
+
 " NERDTree
 map <C-N> :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
-
-" vim-slime
-let g:slime_target = "tmux"
 
 " Mouse
 set mouse=a
@@ -47,3 +49,7 @@ else
     set ttymouse=xterm2
 end
 
+" pbcopy for macOS
+if has('mac')
+  map <F2> :.w !pbcopy<CR>
+end
