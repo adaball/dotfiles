@@ -1,3 +1,10 @@
+EDITOR=vim
+VISUAL=vim
+HISTCONTROL=ignoredups:erasedups
+HISTSIZE=-1
+shopt -s histappend
+shopt -s checkwinsize
+
 alias cp='cp -iv'
 alias ll='ls -lah'
 alias mv='mv -iv'
