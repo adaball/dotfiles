@@ -53,3 +53,12 @@ end
 if has('mac')
   map <F2> :.w !pbcopy<CR>
 end
+
+" run a shell command with its output in a new window
+function! Command()
+  call inputsave()
+  let cmd = input('enter command: ')
+  call inputrestore()
+
+  execute "new | 0read ! " . cmd
+endfunction
