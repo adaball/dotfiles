@@ -62,3 +62,8 @@ function! Command()
 
   execute "new | 0read ! " . cmd
 endfunction
+
+" enable en_us spellchecking for the current buffer
+function! SpellCheck()
+  setlocal spell spelllang=en_us
+endfunction
