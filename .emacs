@@ -6,13 +6,15 @@
 
 (require 'package)
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives 
+             '("melpa" . "https://melpa.org/packages/") t)
 
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
+(when (not package-archive-contents)
+  (package-refresh-contents))
 
-(package-initialize)
+(when (< emacs-major-version 27)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+  (package-initialize))
 
 ;;;;
 ;; utility functions
@@ -77,6 +79,7 @@
 (util/install-package-if-missing 'midje-mode)
 (util/install-package-if-missing 'paredit)
 (util/install-package-if-missing 'rainbow-delimiters)
+(util/install-package-if-missing 'slime)
 (util/install-package-if-missing 'sql-indent)
 (util/install-package-if-missing 'wiki-summary)
 
@@ -189,7 +192,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set font height
-(set-face-attribute 'default nil :height 160)
+(set-face-attribute 'default nil :height 120)
 
 ;; set font face to Monaco if on macOS
 (if (string= system-type "darwin")
