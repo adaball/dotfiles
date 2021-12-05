@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: follow-redirects <url>"
+  exit 1
+fi
+
+curl -s -L -D - "${1}" -o /dev/null -w '%{url_effective}' && echo
