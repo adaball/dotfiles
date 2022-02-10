@@ -6,13 +6,12 @@
 
 (require 'package)
 
-(add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/") t)
+(add-to-list 'package-archives 
+             '("melpa" . "https://melpa.org/packages/") t)
 
-(when (< emacs-major-version 24)
-  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
-
-(package-initialize)
+(when (< emacs-major-version 27)
+  (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/") t)
+  (package-initialize))
 
 ;;;;
 ;; utility functions
@@ -41,7 +40,8 @@
 (defun util/install-package-if-missing (package)
   "perform package installation if package is missing"
   (unless (package-installed-p package)
-    (package-refresh-contents)
+    (when (not package-archive-contents)
+      (package-refresh-contents))
     (package-install package)))
 
 (defun util/friendlier-visible-bell ()
@@ -62,11 +62,20 @@
     (set-face-attribute 'default nil :height (string-to-number updated-height))))
 
 ;;;;
+;; OS specific
+;;;;
+
+;; set font face to Monaco if on macOS
+(if (string= system-type "darwin")
+    (set-frame-font "Monaco" nil t))
+
+;;;;
 ;; install packages
 ;;;;
 
 (util/install-package-if-missing 'base16-theme)
 (util/install-package-if-missing 'cider)
+(util/install-package-if-missing 'clhs)
 (util/install-package-if-missing 'clojure-mode)
 (util/install-package-if-missing 'clojure-mode-extra-font-locking)
 (util/install-package-if-missing 'company)
@@ -77,7 +86,9 @@
 (util/install-package-if-missing 'midje-mode)
 (util/install-package-if-missing 'paredit)
 (util/install-package-if-missing 'rainbow-delimiters)
+(util/install-package-if-missing 'slime)
 (util/install-package-if-missing 'sql-indent)
+(util/install-package-if-missing 'vlf)
 (util/install-package-if-missing 'wiki-summary)
 
 ;;;;
@@ -126,6 +137,8 @@
 (setq nrepl-hide-special-buffers t)
 
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
+
+(setq inferior-lisp-program "sbcl")
 
 ;;;;
 ;; emacs general / ui settings
@@ -189,11 +202,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set font height
-(set-face-attribute 'default nil :height 160)
-
-;; set font face to Monaco if on macOS
-(if (string= system-type "darwin")
-    (set-frame-font "Monaco" nil t))
+(set-face-attribute 'default nil :height 120)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -207,6 +216,19 @@
 ;;;;
 ;; key bindings
 ;;;;
+
+;; evil mode window navigation keys (mirrors my .vimrc)
+(eval-after-load 'evil
+  '(progn
+     (global-unset-key (kbd "C-h")) ;; normally `help`
+     (global-unset-key (kbd "C-l")) ;; normally `recenter-top-bottom`
+     (global-unset-key (kbd "C-j")) ;; normally `paredit-newline`
+     (global-unset-key (kbd "C-k")) ;; normally `paredit-kill`
+     (global-set-key (kbd "C-S-h") 'help)
+     (global-set-key (kbd "C-h") 'evil-window-left)
+     (global-set-key (kbd "C-l") 'evil-window-right)
+     (global-set-key (kbd "C-j") 'evil-window-down)
+     (global-set-key (kbd "C-k") 'evil-window-up)))
 
 ;; fix format of buffer
 (global-set-key (kbd "C-c C-f") 'util/fix-format)

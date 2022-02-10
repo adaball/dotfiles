@@ -1,4 +1,9 @@
 [core]
-	autocrlf = false
+  autocrlf = false
 [push]
-	default = simple
+  default = simple
+[user]
+  email = etc@adamball.org
+  name = Adam Ball
+[pull]
+  ff = only
