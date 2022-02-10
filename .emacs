@@ -88,6 +88,7 @@
 (util/install-package-if-missing 'rainbow-delimiters)
 (util/install-package-if-missing 'slime)
 (util/install-package-if-missing 'sql-indent)
+(util/install-package-if-missing 'undo-tree)
 (util/install-package-if-missing 'vlf)
 (util/install-package-if-missing 'wiki-summary)
 
@@ -102,6 +103,7 @@
 (require 'markdown-mode)
 (require 'paredit)
 (require 'rainbow-delimiters)
+(require 'undo-tree)
 (require 'uniquify)
 
 (evil-mode 1)
@@ -138,7 +140,13 @@
 
 (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
 
+;; common lisp
 (setq inferior-lisp-program "sbcl")
+(if (file-exists-p "C:\\Users\\adam\\quicklisp\\slime-helper.el")
+    (load "C:\\Users\\adam\\quicklisp\\slime-helper.el"))
+
+;; enable `undo-tree`
+(global-undo-tree-mode)
 
 ;;;;
 ;; emacs general / ui settings
