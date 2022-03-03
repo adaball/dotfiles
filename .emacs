@@ -65,9 +65,24 @@
 ;; OS specific
 ;;;;
 
-;; set font face to Monaco if on macOS
+;; set font face to Monaco on work laptop
 (if (string= system-type "darwin")
     (set-frame-font "Monaco" nil t))
+
+;; set Emacs C source directory on home desktop
+(if (string= system-type "windows-nt")
+    (setq source-directory "C:\\Users\\adam\\bin\\emacs-27.2-src\\src"))
+
+;; set org agenda files on home desktop
+(if (string= system-type "windows-nt")
+    (add-win-org-agenda-files))
+
+;; set org agenda files on work laptop
+(if (string= system-type "windows-nt")
+    (add-win-org-agenda-files))
+
+;; set default file coding
+;; FIXME
 
 ;;;;
 ;; install packages
@@ -221,6 +236,9 @@
 (add-to-list 'load-path "/usr/local/bin")
 (add-to-list 'exec-path "~/bin/")
 
+;; use aspell
+(setq-default ispell-program-name "aspell")
+
 ;;;;
 ;; key bindings
 ;;;;
@@ -239,15 +257,26 @@
      (global-set-key (kbd "C-k") 'evil-window-up)))
 
 ;; fix format of buffer
-(global-set-key (kbd "C-c C-f") 'util/fix-format)
+(global-set-key (kbd "C-c f") 'util/fix-format)
 
 ;; comment line with Ctrl-Shift-/
-(global-set-key (kbd "C-?") 'util/toggle-comment-on-line)
+(global-set-key (kbd "C-c ?") 'util/toggle-comment-on-line)
 
 ;; magit status for the current buffer
-(global-set-key (kbd "C-x g") 'magit-status)
+(global-set-key (kbd "C-c g") 'magit-status)
 
 ;; clear Cider's repl buffer with Ctrl+1
 (eval-after-load 'cider-repl
   '(define-key cider-repl-mode-map
      (kbd "C-1") 'cider-repl-clear-buffer))
+
+;; toggle flyspell-mode
+(global-set-key (kbd "C-c s") 'flyspell-mode)
+
+;;;;
+;; org mode
+;;;;
+
+(defun add-win-org-agenda-files ()
+  "Adds agenda files for my desktop"
+  (org-agenda-file-to-front "C:\\Users\\adam\\Dropbox\\org"))
