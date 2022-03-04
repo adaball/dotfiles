@@ -61,6 +61,10 @@
   (let ((updated-height (read-from-minibuffer (format "Enter new height (current is %d): " (face-attribute 'default :height)))))
     (set-face-attribute 'default nil :height (string-to-number updated-height))))
 
+(defun util/add-win-org-agenda-files ()
+  "Adds agenda files for my desktop"
+  (org-agenda-file-to-front "C:\\Users\\adam\\Dropbox\\org"))
+
 ;;;;
 ;; OS specific
 ;;;;
@@ -272,11 +276,3 @@
 
 ;; toggle flyspell-mode
 (global-set-key (kbd "C-c s") 'flyspell-mode)
-
-;;;;
-;; org mode
-;;;;
-
-(defun add-win-org-agenda-files ()
-  "Adds agenda files for my desktop"
-  (org-agenda-file-to-front "C:\\Users\\adam\\Dropbox\\org"))
