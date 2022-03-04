@@ -61,10 +61,6 @@
   (let ((updated-height (read-from-minibuffer (format "Enter new height (current is %d): " (face-attribute 'default :height)))))
     (set-face-attribute 'default nil :height (string-to-number updated-height))))
 
-(defun util/add-win-org-agenda-files ()
-  "Adds agenda files for my desktop"
-  (org-agenda-file-to-front "C:\\Users\\adam\\Dropbox\\org"))
-
 ;;;;
 ;; OS specific
 ;;;;
@@ -76,10 +72,6 @@
 ;; set Emacs C source directory on home desktop
 (if (string= system-type "windows-nt")
     (setq source-directory "C:\\Users\\adam\\bin\\emacs-27.2-src\\src"))
-
-;; set org agenda files on home desktop
-(if (string= system-type "windows-nt")
-    (util/add-win-org-agenda-files))
 
 ;; set default file coding
 ;; FIXME
@@ -167,6 +159,9 @@
 ;; emacs general / ui settings
 ;;;;
 
+;; TODO: load specific theme for UI vs. terminal
+;; `wombat` is a good theme for terminal
+;; `base16-*` is a good theme for UI
 (load-theme 'base16-ashes t)
 
 ;; don't use backup files
