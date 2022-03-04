@@ -79,11 +79,7 @@
 
 ;; set org agenda files on home desktop
 (if (string= system-type "windows-nt")
-    (add-win-org-agenda-files))
-
-;; set org agenda files on work laptop
-(if (string= system-type "windows-nt")
-    (add-win-org-agenda-files))
+    (util/add-win-org-agenda-files))
 
 ;; set default file coding
 ;; FIXME
