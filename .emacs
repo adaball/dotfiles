@@ -17,28 +17,28 @@
 ;; utility functions
 ;;;;
 
-(defun util/replace-tabs ()
-  "replace tabs with spaces"
+(defun util/replace-tabs-in-buffer ()
+  "Replace tabs with spaces"
   (interactive)
   (set-variable 'tab-width 2)
   (mark-whole-buffer)
   (untabify (region-beginning) (region-end))
   (keyboard-quit))
 
-(defun util/fix-format ()
-  "re-indent entire buffer"
+(defun util/fix-format-in-buffer ()
+  "Re-indent entire buffer"
   (interactive)
   (mark-whole-buffer)
   (indent-region (region-beginning) (region-end))
   (keyboard-quit))
 
 (defun util/toggle-comment-on-line ()
-  "comment or uncomment current line"
+  "Comment or uncomment current line"
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 
 (defun util/install-package-if-missing (package)
-  "perform package installation if package is missing"
+  "Perform package installation if package is missing"
   (unless (package-installed-p package)
     (when (not package-archive-contents)
       (package-refresh-contents))
@@ -50,31 +50,60 @@
   (run-with-timer 0.1 nil 'invert-face 'mode-line))
 
 (defun util/delete-process-interactive ()
-  "delete process using an ido-read buffer (http://stackoverflow.com/questions/11572934/how-do-i-kill-a-running-process-in-emacs#11573495)"
+  "Delete process using an ido-read buffer (http://stackoverflow.com/questions/11572934/how-do-i-kill-a-running-process-in-emacs#11573495)"
   (interactive)
   (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
     (delete-process (get-process pname))))
 
-(defun util/change-font-height ()
-  "interactively change font height attribute"
-  (interactive)
-  (let ((updated-height (read-from-minibuffer (format "Enter new height (current is %d): " (face-attribute 'default :height)))))
-    (set-face-attribute 'default nil :height (string-to-number updated-height))))
+(defun util/set-font-height ()
+  "Interactively change font height attribute"
+  (interactive
+   (let* ((current-height (face-attribute 'default :height))
+          (updated-height (read-from-minibuffer
+                           (format "Enter new height (current is %d): " current-height))))
+     (set-face-attribute 'default nil :height (string-to-number updated-height)))))
+
+(defun util/is-windows-p ()
+  "Confirm if the running OS is Windows"
+  (string= system-type "windows-nt"))
+
+(defun util/is-macos-p ()
+  "Confirm if the running OS is macOS"
+  (string= system-type "darwin"))
+
+(defun util/url-escape-region (start end)
+  "URL escape the current selected text"
+  (interactive "r")
+  (if (eq nil 'url-unhex-string)
+      (require 'url-util))
+  (save-excursion
+    (let ((sub-str (buffer-substring-no-properties start end)))
+      (delete-region start end)
+      (goto-char start)
+      (insert (url-unhex-string sub-str)))))
 
 ;;;;
 ;; OS specific
 ;;;;
 
 ;; set font face to Monaco on work laptop
-(if (string= system-type "darwin")
-    (set-frame-font "Monaco" nil t))
+(if (and (util/is-macos-p) (member "Source Code Pro" (font-family-list)))
+    (set-face-attribute 'default nil :font "Monaco"))
+
+;; set font face to Source Code Pro if we're on Windows and it's installed
+(if (and (util/is-windows-p) (member "Source Code Pro" (font-family-list)))
+    (set-face-attribute 'default nil :font "Source Code Pro"))
 
 ;; set Emacs C source directory on home desktop
-(if (string= system-type "windows-nt")
-    (setq source-directory "C:\\Users\\adam\\bin\\emacs-27.2-src\\src"))
+(if (and (util/is-windows-p) (file-exists-p "c:/Users/adam/bin/emacs-27.2-src/"))
+    (setq source-directory "c:/Users/adam/bin/emacs-27.2-src/"))
 
-;; set default file coding
-;; FIXME
+;;;;
+;; miscellaneous, pre-package load
+;;;;
+
+;; disable deprecation warnings about the `cl` library
+(setq byte-compile-warnings '(cl-functions))
 
 ;;;;
 ;; install packages
@@ -131,8 +160,7 @@
 ;; normal <delete> key binding in paredit
 (eval-after-load 'paredit
   '(progn
-     (define-key paredit-mode-map (kbd "<delete>")
-       nil)))
+     (define-key paredit-mode-map (kbd "<delete>") nil)))
 
 ;; load sql-indent
 (eval-after-load "sql"
@@ -155,13 +183,13 @@
 ;; enable `undo-tree`
 (global-undo-tree-mode)
 
+;; use `undo-tree` with evil
+(evil-set-undo-system 'undo-tree)
+
 ;;;;
 ;; emacs general / ui settings
 ;;;;
 
-;; TODO: load specific theme for UI vs. terminal
-;; `wombat` is a good theme for terminal
-;; `base16-*` is a good theme for UI
 (load-theme 'base16-ashes t)
 
 ;; don't use backup files
@@ -219,8 +247,8 @@
 ;; full path in title bar
 (setq-default frame-title-format "%b (%f)")
 
-;; set font height
-(set-face-attribute 'default nil :height 120)
+;; set default font height
+(set-face-attribute 'default nil :height 110)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -252,10 +280,10 @@
      (global-set-key (kbd "C-k") 'evil-window-up)))
 
 ;; fix format of buffer
-(global-set-key (kbd "C-c f") 'util/fix-format)
+(global-set-key (kbd "C-c f") 'util/fix-format-in-buffer)
 
-;; comment line with Ctrl-Shift-/
-(global-set-key (kbd "C-c ?") 'util/toggle-comment-on-line)
+;; comment line
+(global-set-key (kbd "C-c C-/") 'util/toggle-comment-on-line)
 
 ;; magit status for the current buffer
 (global-set-key (kbd "C-c g") 'magit-status)
@@ -267,3 +295,34 @@
 
 ;; toggle flyspell-mode
 (global-set-key (kbd "C-c s") 'flyspell-mode)
+
+;;;;
+;; org-mode
+;;;;
+
+;; set the `org-directory` var based on the host OS
+(setq org-directory
+      (file-name-as-directory
+       (if (util/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org")))
+
+
+;; set up a singular archive file
+(setq org-archive-file (concat org-directory "archive.org"))
+
+;; set up the archive location
+(setq org-archive-location (format "%s::* From %%s" org-archive-file))
+
+;;;;
+;; FIXME!
+;;;;
+
+;; FIXME: set up some golang functionality
+;;        https://github.com/hrs/dotfiles/blob/main/emacs/dot-emacs.d/configuration.org#golang
+;; FIXME: convert all package installations to use `use-package`
+;;        https://github.com/jwiegley/use-package
+;; FIXME: Emacs C Source initialization doesn't seem to work when i set the directory 
+;;        Emacs var: `source-directory`
+;; FIXME: write something that will set the default file coding to utf-8
+;; FIXME: load specific theme for UI vs. terminal
+;;        `wombat` is a good theme for terminal
+;;        `base16-*` is a good theme for UI (I think I've been using base16-ashes)
