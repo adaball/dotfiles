@@ -301,28 +301,44 @@
 ;;;;
 
 ;; set the `org-directory` var based on the host OS
-(setq org-directory
-      (file-name-as-directory
-       (if (util/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org")))
+(setq org-directory (if (util/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
 
+(defun org-file-path (filename)
+  "Return the absolute address of an org file, given its relative name."
+  (concat (file-name-as-directory org-directory) filename))
 
-;; set up a singular archive file
-(setq org-archive-file (concat org-directory "archive.org"))
+(setq org-inbox-file (org-file-path "inbox.org"))
+(setq org-archive-location
+      (concat
+       (org-file-path (format "archive/archive-%s.org" (format-time-string "%Y")))
+       "::* From %s"))
 
-;; set up the archive location
-(setq org-archive-location (format "%s::* From %%s" org-archive-file))
+(setq org-refile-targets '((org-inbox-file :level . 1)
+                           ((org-file-path "work-tickets.org") :level . 1)))
+
+(setq org-agenda-files (list org-inbox-file
+                             (org-file-path "work-tickets.org")))
+
+;; record when a task is marked DONE
+(setq org-log-done 'time)
+
+;; don't allow a parent task to go to DONE items unless all children are DONE as well
+(setq org-enforce-todo-dependencies t)
 
 ;;;;
-;; FIXME!
+;; FIXME! Things to address later.
 ;;;;
 
 ;; FIXME: set up some golang functionality
 ;;        https://github.com/hrs/dotfiles/blob/main/emacs/dot-emacs.d/configuration.org#golang
+;; FIXME: set up some Python functionality
 ;; FIXME: convert all package installations to use `use-package`
 ;;        https://github.com/jwiegley/use-package
-;; FIXME: Emacs C Source initialization doesn't seem to work when i set the directory 
+;; FIXME: Emacs C Source initialization doesn't seem to work when i set the directory
 ;;        Emacs var: `source-directory`
 ;; FIXME: write something that will set the default file coding to utf-8
 ;; FIXME: load specific theme for UI vs. terminal
 ;;        `wombat` is a good theme for terminal
 ;;        `base16-*` is a good theme for UI (I think I've been using base16-ashes)
+;; FIXME: set the option to compile packages that are installed (? in the hrs conf file)
+;; FIXME: setup an auto-timestamp when adding a new TODO task in org mode
