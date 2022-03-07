@@ -296,6 +296,12 @@
 ;; toggle flyspell-mode
 (global-set-key (kbd "C-c s") 'flyspell-mode)
 
+;; view the yank menu
+(global-set-key (kbd "C-c y")
+                '(lambda ()
+                   (interactive)
+                   (popup-menu 'yank-menu)))
+
 ;;;;
 ;; org-mode
 ;;;;
