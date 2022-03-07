@@ -87,7 +87,7 @@
 ;;;;
 
 ;; set font face to Monaco on work laptop
-(if (and (util/is-macos-p) (member "Source Code Pro" (font-family-list)))
+(if (and (util/is-macos-p) (member "Monaco" (font-family-list)))
     (set-face-attribute 'default nil :font "Monaco"))
 
 ;; set font face to Source Code Pro if we're on Windows and it's installed
