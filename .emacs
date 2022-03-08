@@ -55,13 +55,10 @@
   (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
     (delete-process (get-process pname))))
 
-(defun util/set-font-height ()
+(defun util/set-font-height (h)
   "Interactively change font height attribute"
-  (interactive
-   (let* ((current-height (face-attribute 'default :height))
-          (updated-height (read-from-minibuffer
-                           (format "Enter new height (current is %d): " current-height))))
-     (set-face-attribute 'default nil :height (string-to-number updated-height)))))
+  (interactive "sEnter new height: ")
+  (set-face-attribute 'default nil :height (if (eq (type-of h) 'string) (string-to-number h) h)))
 
 (defun util/is-windows-p ()
   "Confirm if the running OS is Windows"
@@ -88,7 +85,7 @@
 
 ;; set font face to Monaco on work laptop
 (if (and (util/is-macos-p) (member "Monaco" (font-family-list)))
-    (set-face-attribute 'default nil :font "Monaco"))
+    (set-face-attribute 'default nil :font "Source Code Pro"))
 
 ;; set font face to Source Code Pro if we're on Windows and it's installed
 (if (and (util/is-windows-p) (member "Source Code Pro" (font-family-list)))
@@ -248,7 +245,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(set-face-attribute 'default nil :height 110)
+(util/set-font-height 140)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -330,6 +327,11 @@
 
 ;; don't allow a parent task to go to DONE items unless all children are DONE as well
 (setq org-enforce-todo-dependencies t)
+
+(global-set-key (kbd "C-x t")
+                '(lambda ()
+                   (interactive)
+                   (org-time-stamp-inactive (format-time-string "%H:%m"))))
 
 ;;;;
 ;; FIXME! Things to address later.
