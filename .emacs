@@ -79,6 +79,11 @@
       (goto-char start)
       (insert (url-unhex-string sub-str)))))
 
+(defun util/generate-scratch-buffer ()
+  "Create and switch to a temporary scratch buffer with a name."
+  (interactive)
+  (switch-to-buffer (make-temp-name "scratch-")))
+
 ;;;;
 ;; OS specific
 ;;;;
@@ -328,7 +333,14 @@
 ;; don't allow a parent task to go to DONE items unless all children are DONE as well
 (setq org-enforce-todo-dependencies t)
 
-(global-set-key (kbd "C-x t")
+;; open a file in the defined `org-directory` var
+(global-set-key (kbd "C-x f") ;; previously `set-fill-column`
+                '(lambda ()
+                   (interactive)
+                   (find-file (read-file-name "Org file: " (concat org-directory "/")))))
+
+;; insert an inactive org time stamp
+(global-set-key (kbd "C-x t") ;; not previously bound AFAICT
                 '(lambda ()
                    (interactive)
                    (org-time-stamp-inactive (format-time-string "%H:%m"))))
