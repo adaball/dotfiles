@@ -366,3 +366,4 @@
 ;;        `base16-*` is a good theme for UI (I think I've been using base16-ashes)
 ;; FIXME: set the option to compile packages that are installed (? in the hrs conf file)
 ;; FIXME: setup an auto-timestamp when adding a new TODO task in org mode
+;; FIXME: add exception handling to convert-epoch util function (shouldn't erase region unless conversion is successful)
