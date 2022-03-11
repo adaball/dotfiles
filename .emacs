@@ -88,13 +88,8 @@
 ;; OS specific
 ;;;;
 
-;; set font face to Monaco on work laptop
-(if (and (util/is-macos-p) (member "Monaco" (font-family-list)))
-    (set-face-attribute 'default nil :font "Source Code Pro"))
-
-;; set font face to Source Code Pro if we're on Windows and it's installed
-(if (and (util/is-windows-p) (member "Source Code Pro" (font-family-list)))
-    (set-face-attribute 'default nil :font "Source Code Pro"))
+;; set font face to Source Code Pro
+(set-face-attribute 'default nil :font "Source Code Pro")
 
 ;; set Emacs C source directory on home desktop
 (if (and (util/is-windows-p) (file-exists-p "c:/Users/adam/bin/emacs-27.2-src/"))
