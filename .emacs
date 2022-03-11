@@ -79,6 +79,15 @@
       (goto-char start)
       (insert (url-unhex-string sub-str)))))
 
+(defun util/convert-from-epoch-region (start end)
+  "Convert epoch timestamp in region to `Y-m-d H:M:S`"
+  (interactive "r")
+  (save-excursion
+    (let ((sub-str (buffer-substring-no-properties start end)))
+      (delete-region start end)
+      (goto-char start)
+      (insert (format-time-string "%Y-%m-%d %H:%M:%S" (string-to-number sub-str))))))
+
 (defun util/generate-scratch-buffer ()
   "Create and switch to a temporary scratch buffer with a name."
   (interactive)
