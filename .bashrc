@@ -4,6 +4,7 @@ shopt -s histappend
 shopt -s checkwinsize
 
 alias cp='cp -iv'
+alias grep='grep --color=auto'
 alias ll='ls -lah'
 alias mv='mv -iv'
 alias rm='rm -iv'
