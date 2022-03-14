@@ -202,7 +202,7 @@
 (setq make-backup-files nil)
 
 ;; set the initial mode and nix the scratch message
-(setq initial-major-mode 'fundamental-mode)
+(setq initial-major-mode 'org-mode)
 (setq initial-scratch-message nil)
 
 ;; use y/n instead of yes/no
@@ -254,7 +254,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(util/set-font-height 140)
+(util/set-font-height 120)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -367,3 +367,5 @@
 ;; FIXME: set the option to compile packages that are installed (? in the hrs conf file)
 ;; FIXME: setup an auto-timestamp when adding a new TODO task in org mode
 ;; FIXME: add exception handling to convert-epoch util function (shouldn't erase region unless conversion is successful)
+;; FIXME: `C-j` should behave differently when in evil's insert mode vs. normal mode: in insert mode it should
+;;        move the cursor to the next line, in normal mode it should go to the window below the current one
