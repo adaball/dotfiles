@@ -349,7 +349,12 @@
 (global-set-key (kbd "C-x f") ;; previously `set-fill-column`
                 '(lambda ()
                    (interactive)
-                   (find-file (read-file-name "Org file: " (concat org-directory "/")))))
+                   (find-file
+                    (read-file-name "Org file: "
+                                    ;; make sure it ends in a "/"
+                                    (if (string= "/" (substring org-directory -1))
+                                      org-directory
+                                      (concat org-directory "/"))))))
 
 ;; insert an inactive org time stamp
 (global-set-key (kbd "C-x t") ;; not previously bound AFAICT
@@ -377,3 +382,4 @@
 ;; FIXME: add exception handling to convert-epoch util function (shouldn't erase region unless conversion is successful)
 ;; FIXME: `C-j` should behave differently when in evil's insert mode vs. normal mode: in insert mode it should
 ;;        move the cursor to the next line, in normal mode it should go to the window below the current one
+;; FIXME: figure out a better key pattern for my custom binds (is `C-x` really the best choice?)
