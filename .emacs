@@ -25,9 +25,10 @@
 (defun amb/fix-format-in-buffer ()
   "Re-indent entire buffer"
   (interactive)
-  (mark-whole-buffer)
-  (indent-region (region-beginning) (region-end))
-  (keyboard-quit))
+  (save-excursion
+    (mark-whole-buffer)
+    (indent-region (region-beginning) (region-end))
+    (keyboard-quit)))
 
 (defun amb/toggle-comment-on-line ()
   "Comment or uncomment current line"
@@ -350,7 +351,7 @@
                     (read-file-name "Org file: "
                                     ;; make sure it ends in a "/"
                                     (if (string= "/" (substring org-directory -1))
-                                      org-directory
+                                        org-directory
                                       (concat org-directory "/"))))))
 
 ;; insert an inactive org time stamp
