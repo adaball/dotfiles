@@ -17,7 +17,7 @@
 ;; utility functions
 ;;;;
 
-(defun util/replace-tabs-in-buffer ()
+(defun amb/replace-tabs-in-buffer ()
   "Replace tabs with spaces"
   (interactive)
   (set-variable 'tab-width 2)
@@ -25,50 +25,50 @@
   (untabify (region-beginning) (region-end))
   (keyboard-quit))
 
-(defun util/fix-format-in-buffer ()
+(defun amb/fix-format-in-buffer ()
   "Re-indent entire buffer"
   (interactive)
   (mark-whole-buffer)
   (indent-region (region-beginning) (region-end))
   (keyboard-quit))
 
-(defun util/toggle-comment-on-line ()
+(defun amb/toggle-comment-on-line ()
   "Comment or uncomment current line"
   (interactive)
   (comment-or-uncomment-region (line-beginning-position) (line-end-position)))
 
-(defun util/install-package-if-missing (package)
+(defun amb/install-package-if-missing (package)
   "Perform package installation if package is missing"
   (unless (package-installed-p package)
     (when (not package-archive-contents)
       (package-refresh-contents))
     (package-install package)))
 
-(defun util/friendlier-visible-bell ()
+(defun amb/friendlier-visible-bell ()
   "A friendlier visual bell effect. (https://www.emacswiki.org/emacs/AlarmBell#toc8)"
   (invert-face 'mode-line)
   (run-with-timer 0.1 nil 'invert-face 'mode-line))
 
-(defun util/delete-process-interactive ()
+(defun amb/delete-process-interactive ()
   "Delete process using an ido-read buffer (http://stackoverflow.com/questions/11572934/how-do-i-kill-a-running-process-in-emacs#11573495)"
   (interactive)
   (let ((pname (ido-completing-read "Process Name: " (mapcar 'process-name (process-list)))))
     (delete-process (get-process pname))))
 
-(defun util/set-font-height (h)
+(defun amb/set-font-height (h)
   "Interactively change font height attribute"
   (interactive "sEnter new height: ")
   (set-face-attribute 'default nil :height (if (eq (type-of h) 'string) (string-to-number h) h)))
 
-(defun util/is-windows-p ()
+(defun amb/is-windows-p ()
   "Confirm if the running OS is Windows"
   (string= system-type "windows-nt"))
 
-(defun util/is-macos-p ()
+(defun amb/is-macos-p ()
   "Confirm if the running OS is macOS"
   (string= system-type "darwin"))
 
-(defun util/url-escape-region (start end)
+(defun amb/url-escape-region (start end)
   "URL escape the current selected text"
   (interactive "r")
   (if (eq nil 'url-unhex-string)
@@ -79,7 +79,7 @@
       (goto-char start)
       (insert (url-unhex-string sub-str)))))
 
-(defun util/convert-from-epoch-region (start end)
+(defun amb/convert-from-epoch-region (start end)
   "Convert epoch timestamp in region to `Y-m-d H:M:S`"
   (interactive "r")
   (save-excursion
@@ -88,10 +88,15 @@
       (goto-char start)
       (insert (format-time-string "%Y-%m-%d %H:%M:%S" (string-to-number sub-str))))))
 
-(defun util/generate-scratch-buffer ()
-  "Create and switch to a temporary scratch buffer with a name."
-  (interactive)
-  (switch-to-buffer (make-temp-name "scratch-")))
+(defun amb/gen-scratch-buffer (&optional switch)
+  "Make a new scratch buffer.  If called interactively, switch to the new buffer."
+  (interactive (list 't))
+  (let ((buffer (generate-new-buffer (make-temp-name "scratch-"))))
+    (with-current-buffer buffer
+      (linum-mode)
+      (org-mode)
+      (undo-tree-mode))
+    (if switch (switch-to-buffer buffer) buffer)))
 
 ;;;;
 ;; OS specific
@@ -101,7 +106,7 @@
 (set-face-attribute 'default nil :font "Source Code Pro")
 
 ;; set Emacs C source directory on home desktop
-(if (and (util/is-windows-p) (file-exists-p "c:/Users/adam/bin/emacs-27.2-src/"))
+(if (and (amb/is-windows-p) (file-exists-p "c:/Users/adam/bin/emacs-27.2-src/"))
     (setq source-directory "c:/Users/adam/bin/emacs-27.2-src/"))
 
 ;;;;
@@ -115,24 +120,24 @@
 ;; install packages
 ;;;;
 
-(util/install-package-if-missing 'base16-theme)
-(util/install-package-if-missing 'cider)
-(util/install-package-if-missing 'clhs)
-(util/install-package-if-missing 'clojure-mode)
-(util/install-package-if-missing 'clojure-mode-extra-font-locking)
-(util/install-package-if-missing 'company)
-(util/install-package-if-missing 'evil)
-(util/install-package-if-missing 'json-mode)
-(util/install-package-if-missing 'magit)
-(util/install-package-if-missing 'markdown-mode)
-(util/install-package-if-missing 'midje-mode)
-(util/install-package-if-missing 'paredit)
-(util/install-package-if-missing 'rainbow-delimiters)
-(util/install-package-if-missing 'slime)
-(util/install-package-if-missing 'sql-indent)
-(util/install-package-if-missing 'undo-tree)
-(util/install-package-if-missing 'vlf)
-(util/install-package-if-missing 'wiki-summary)
+(amb/install-package-if-missing 'base16-theme)
+(amb/install-package-if-missing 'cider)
+(amb/install-package-if-missing 'clhs)
+(amb/install-package-if-missing 'clojure-mode)
+(amb/install-package-if-missing 'clojure-mode-extra-font-locking)
+(amb/install-package-if-missing 'company)
+(amb/install-package-if-missing 'evil)
+(amb/install-package-if-missing 'json-mode)
+(amb/install-package-if-missing 'magit)
+(amb/install-package-if-missing 'markdown-mode)
+(amb/install-package-if-missing 'midje-mode)
+(amb/install-package-if-missing 'paredit)
+(amb/install-package-if-missing 'rainbow-delimiters)
+(amb/install-package-if-missing 'slime)
+(amb/install-package-if-missing 'sql-indent)
+(amb/install-package-if-missing 'undo-tree)
+(amb/install-package-if-missing 'vlf)
+(amb/install-package-if-missing 'wiki-summary)
 
 ;;;;
 ;; requires / hooks / init
@@ -201,9 +206,11 @@
 ;; don't use backup files
 (setq make-backup-files nil)
 
-;; set the initial mode and nix the scratch message
-(setq initial-major-mode 'org-mode)
+;; set up the initial scratch buffer
 (setq initial-scratch-message nil)
+(defun init-scratch ()
+  (amb/gen-scratch-buffer nil))
+(setq initial-buffer-choice #'init-scratch)
 
 ;; use y/n instead of yes/no
 (fset 'yes-or-no-p 'y-or-n-p)
@@ -239,12 +246,13 @@
 
 ;; use friendlier visual bell
 (setq visible-bell nil)
-(setq ring-bell-function #'util/friendlier-visible-bell)
+(setq ring-bell-function #'amb/friendlier-visible-bell)
 
 ;; matching parens highlight
 (show-paren-mode 1)
 
 ;; global line numbers
+(setq linum-format " %03d")
 (global-linum-mode 1)
 
 ;; no cursor blinking
@@ -254,7 +262,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(util/set-font-height 120)
+(amb/set-font-height 120)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -286,10 +294,10 @@
      (global-set-key (kbd "C-k") 'evil-window-up)))
 
 ;; fix format of buffer
-(global-set-key (kbd "C-c f") 'util/fix-format-in-buffer)
+(global-set-key (kbd "C-c f") 'amb/fix-format-in-buffer)
 
 ;; comment line
-(global-set-key (kbd "C-c C-/") 'util/toggle-comment-on-line)
+(global-set-key (kbd "C-c C-/") 'amb/toggle-comment-on-line)
 
 ;; magit status for the current buffer
 (global-set-key (kbd "C-c g") 'magit-status)
@@ -313,7 +321,7 @@
 ;;;;
 
 ;; set the `org-directory` var based on the host OS
-(setq org-directory (if (util/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
+(setq org-directory (if (amb/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
 
 (defun org-file-path (filename)
   "Return the absolute address of an org file, given its relative name."
