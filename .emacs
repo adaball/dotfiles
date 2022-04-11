@@ -199,7 +199,8 @@
 ;; emacs general / ui settings
 ;;;;
 
-(load-theme 'base16-ashes t)
+;; (load-theme 'base16-ashes t)
+(load-theme 'wombat t)
 
 ;; don't use backup files
 (setq make-backup-files nil)
@@ -342,6 +343,16 @@
 
 ;; don't allow a parent task to go to DONE items unless all children are DONE as well
 (setq org-enforce-todo-dependencies t)
+
+;; set exporting to a specific directory
+;; https://stackoverflow.com/a/47850858
+(defun org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
+  (unless pub-dir
+    (setq pub-dir (concat (file-name-as-directory org-directory) "exported-org-files"))
+    (unless (file-directory-p pub-dir)
+      (make-directory pub-dir)))
+  (apply orig-fun extension subtreep pub-dir nil))
+(advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
 
 ;; open a file in the defined `org-directory` var
 (global-set-key (kbd "C-x f") ;; previously `set-fill-column`
