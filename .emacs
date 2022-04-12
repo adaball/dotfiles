@@ -392,3 +392,4 @@
 ;; FIXME: `C-j` should behave differently when in evil's insert mode vs. normal mode: in insert mode it should
 ;;        move the cursor to the next line, in normal mode it should go to the window below the current one
 ;; FIXME: figure out a better key pattern for my custom binds (is `C-x` really the best choice?)
+;; FIXME: figure out how to make the FIND-DONE prefix argument the default when arching org subtress (i.e. only ever archive DONE items)
