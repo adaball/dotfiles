@@ -209,7 +209,6 @@
   :ensure t)
 
 (use-package rainbow-delimiters
-  :after (cider)
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
   (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
@@ -310,7 +309,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(amb/set-font-height 120)
+(amb/set-font-height 140)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
