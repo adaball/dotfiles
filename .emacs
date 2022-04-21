@@ -188,7 +188,7 @@
 
 (use-package json-mode
   :config
-  (add-to-list 'auto-mode-alist '("\\ . json$" . json-mode))
+  (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
   :ensure t)
 
 (use-package magit
@@ -445,3 +445,5 @@
 ;;        move the cursor to the next line, in normal mode it should go to the window below the current one
 ;; FIXME: figure out a better key pattern for my custom binds (is `C-x` really the best choice?)
 ;; FIXME: figure out how to make the FIND-DONE prefix argument the default when arching org subtress (i.e. only ever archive DONE items)
+;; FIXME: the evil bindings (and all bindings in general) seem to be messed up when using the terminal
+;;        for instance, I was unable to use `M-x b` to toggle buffers while in a terminal
