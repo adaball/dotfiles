@@ -8,7 +8,12 @@
 
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
-(package-initialize)
+
+;; ensure `use-package` is installed
+(unless (package-installed-p 'use-package)
+  (when (not package-archive-contents)
+    (package-refresh-contents))
+  (package-install 'use-package))
 
 ;;;;
 ;; utility functions
@@ -100,8 +105,13 @@
 ;; OS specific
 ;;;;
 
-;; set font face to Source Code Pro
-(set-face-attribute 'default nil :font "Source Code Pro")
+;; set font face to Source Code Pro if it's available
+(when (member "Source Code Pro" (font-family-list))
+  (set-face-attribute 'default nil :font "Source Code Pro"))
+
+;; set some OS specific backups
+(when (amb/is-windows-p) (set-fontset-font t nil "Consolas" nil 'append))
+(when (amb/is-macos-p) (set-fontset-font t nil "Monaco" nil 'append))
 
 ;; set Emacs C source directory on home desktop
 (if (and (amb/is-windows-p) (file-exists-p "c:/Users/adam/bin/emacs-27.2-src/"))
@@ -115,92 +125,133 @@
 (setq byte-compile-warnings '(cl-functions))
 
 ;;;;
-;; install packages
+;; install and configure packages
 ;;;;
 
-(amb/install-package-if-missing 'base16-theme)
-(amb/install-package-if-missing 'cider)
-(amb/install-package-if-missing 'clhs)
-(amb/install-package-if-missing 'clojure-mode)
-(amb/install-package-if-missing 'clojure-mode-extra-font-locking)
-(amb/install-package-if-missing 'company)
-(amb/install-package-if-missing 'evil)
-(amb/install-package-if-missing 'json-mode)
-(amb/install-package-if-missing 'magit)
-(amb/install-package-if-missing 'markdown-mode)
-(amb/install-package-if-missing 'midje-mode)
-(amb/install-package-if-missing 'paredit)
-(amb/install-package-if-missing 'rainbow-delimiters)
-(amb/install-package-if-missing 'slime)
-(amb/install-package-if-missing 'sql-indent)
-(amb/install-package-if-missing 'undo-tree)
-(amb/install-package-if-missing 'vlf)
-(amb/install-package-if-missing 'wiki-summary)
+(use-package base16-theme
+  :config
+  (load-theme 'base16-ashes t)
+  :ensure t)
+
+(use-package cider
+  :config 
+  (setq cider-prompt-save-file-on-load nil)
+  (setq cider-repl-result-prefix ";; => ")
+  (setq nrepl-hide-special-buffers t)
+  (add-hook 'cider-repl-mode-map #'eldoc-mode)
+  :bind (:map cider-repl-mode-map
+              ("C-1" . cider-repl-clear-buffer))
+  :ensure t)
+
+(use-package clhs
+  :ensure t)
+
+(use-package clojure-mode
+  :config
+  (add-hook 'clojure-mode-hook #'eldoc-mode)
+  :ensure t)
+
+(use-package clojure-mode-extra-font-locking
+  :ensure t)
+
+(use-package company
+  :config
+  (require 'company)
+  (add-hook 'after-init-hook #'global-company-mode)
+  :ensure t)
+
+(use-package evil
+  :after (undo-tree)
+  :bind (("C-h" . evil-window-left)
+         ("C-l" . evil-window-right)
+         ("C-j" . evil-window-down)
+         ("C-k" . evil-window-up))
+  :config
+  (require 'evil)
+  (evil-mode 1)
+  (evil-set-undo-system 'undo-tree)
+  (global-set-key (kbd "C-S-h") 'help)
+  (global-set-key (kbd "C-?") 'comment-or-uncomment-region)
+  (add-hook 'package-menu-mode-hook #'turn-on-evil-mode)
+
+  ;; for `M-x list-packages`
+  ;; https://www.reddit.com/r/emacs/comments/7dsm0j/comment/dq03zwu/
+  (add-to-list 'evil-buffer-regexps '("*Packages*" . normal))
+  (with-eval-after-load 'package
+    ;; movement keys j,k,l,h set up for free by defaulting to normal mode.
+    ;; mark, unmark, install
+    (evil-define-key 'normal package-menu-mode-map (kbd "m") #'package-menu-mark-install)
+    (evil-define-key 'normal package-menu-mode-map (kbd "u") #'package-menu-mark-unmark)
+    (evil-define-key 'normal package-menu-mode-map (kbd "x") #'package-menu-execute))
+  :demand t
+  :ensure t)
+
+(use-package json-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\ . json$" . json-mode))
+  :ensure t)
+
+(use-package magit
+  :bind ("C-c g" . magit-status)
+  :ensure t)
+
+(use-package markdown-mode
+  :ensure t)
+
+(use-package paredit
+  :bind (:map paredit-mode-map
+              ("<delete>" . nil))
+  :config
+  (add-hook 'cider-repl-mode-hook #'enable-paredit-mode)
+  (add-hook 'clojure-repl-mode-hook #'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+  :ensure t)
+
+(use-package rainbow-delimiters
+  :after (cider)
+  :config
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
+  (add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
+  :ensure t)
+
+(use-package slime
+  :config
+  (setq inferior-lisp-program "sbcl")
+  (if (file-exists-p "C:\\Users\\adam\\quicklisp\\slime-helper.el")
+      (load "C:\\Users\\adam\\quicklisp\\slime-helper.el"))
+  :ensure t)
+
+(use-package sql-indent
+  :config
+  (add-hook 'sql-mode-hook #'sqlind-minor-mode)
+  :ensure t)
+
+(use-package undo-tree
+  :bind (:map undo-tree-map
+              ("C-?" . nil))
+  :config
+  (global-undo-tree-mode)
+  :ensure t)
+
+(use-package vlf
+  :ensure t)
+
+(use-package wiki-summary
+  :ensure t)
 
 ;;;;
 ;; requires / hooks / init
 ;;;;
 
-(require 'company)
-(require 'evil)
-(require 'json-mode)
-(require 'magit)
-(require 'markdown-mode)
-(require 'paredit)
-(require 'rainbow-delimiters)
-(require 'undo-tree)
 (require 'uniquify)
 
-(evil-mode 1)
-
-(add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'cider-repl-mode-hook #'eldoc-mode)
-(add-hook 'cider-repl-mode-hook #'midje-mode)
-(add-hook 'cider-repl-mode-hook #'paredit-mode)
-(add-hook 'cider-repl-mode-hook #'rainbow-delimiters-mode)
-(add-hook 'clojure-mode-hook #'eldoc-mode)
-(add-hook 'clojure-mode-hook #'paredit-mode)
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook #'paredit-mode)
 (add-hook 'ielm-mode-hook #'eldoc-mode)
-(add-hook 'ielm-mode-hook #'paredit-mode)
-(add-hook 'prog-mode-hook #'rainbow-delimiters-mode)
-
-;; normal <delete> key binding in paredit
-(eval-after-load 'paredit
-  '(progn
-     (define-key paredit-mode-map (kbd "<delete>") nil)))
-
-;; load sql-indent
-(eval-after-load "sql"
-  '(load-library "sql-indent"))
-
-;; disable evil mode in cider-repl
-(evil-set-initial-state 'cider-repl-mode 'emacs)
-
-(setq cider-prompt-save-file-on-load nil)
-(setq cider-repl-result-prefix ";; => ")
-(setq nrepl-hide-special-buffers t)
-
-(add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
-
-;; common lisp
-(setq inferior-lisp-program "sbcl")
-(if (file-exists-p "C:\\Users\\adam\\quicklisp\\slime-helper.el")
-    (load "C:\\Users\\adam\\quicklisp\\slime-helper.el"))
-
-;; enable `undo-tree`
-(global-undo-tree-mode)
-
-;; use `undo-tree` with evil
-(evil-set-undo-system 'undo-tree)
 
 ;;;;
 ;; emacs general / ui settings
 ;;;;
-
-;; (load-theme 'base16-ashes t)
-(load-theme 'wombat t)
 
 ;; don't use backup files
 (setq make-backup-files nil)
@@ -239,8 +290,6 @@
 (setq inhibit-startup-message t)
 
 ;; global highlight lines
-(custom-set-faces
- '(hl-line ((t (:background "#393f45")))))
 (global-hl-line-mode 1)
 
 ;; use friendlier visual bell
@@ -269,9 +318,6 @@
     (write-region "" nil custom-file))
 (load custom-file)
 
-(add-to-list 'load-path "/usr/local/bin")
-(add-to-list 'exec-path "~/bin/")
-
 ;; use aspell
 (setq-default ispell-program-name "aspell")
 
@@ -279,32 +325,8 @@
 ;; key bindings
 ;;;;
 
-;; evil mode window navigation keys (mirrors my .vimrc)
-(eval-after-load 'evil
-  '(progn
-     (global-unset-key (kbd "C-h")) ;; normally `help`
-     (global-unset-key (kbd "C-l")) ;; normally `recenter-top-bottom`
-     (global-unset-key (kbd "C-j")) ;; normally `paredit-newline`
-     (global-unset-key (kbd "C-k")) ;; normally `paredit-kill`
-     (global-set-key (kbd "C-S-h") 'help)
-     (global-set-key (kbd "C-h") 'evil-window-left)
-     (global-set-key (kbd "C-l") 'evil-window-right)
-     (global-set-key (kbd "C-j") 'evil-window-down)
-     (global-set-key (kbd "C-k") 'evil-window-up)))
-
 ;; fix format of buffer
 (global-set-key (kbd "C-c f") 'amb/fix-format-in-buffer)
-
-;; comment line
-(global-set-key (kbd "C-c C-/") 'amb/toggle-comment-on-line)
-
-;; magit status for the current buffer
-(global-set-key (kbd "C-c g") 'magit-status)
-
-;; clear Cider's repl buffer with Ctrl+1
-(eval-after-load 'cider-repl
-  '(define-key cider-repl-mode-map
-     (kbd "C-1") 'cider-repl-clear-buffer))
 
 ;; toggle flyspell-mode
 (global-set-key (kbd "C-c s") 'flyspell-mode)
@@ -315,44 +337,43 @@
                    (interactive)
                    (popup-menu 'yank-menu)))
 
+(global-set-key (kbd "C-c c") #'org-capture)
+
 ;;;;
 ;; org-mode
 ;;;;
 
-;; set the `org-directory` var based on the host OS
-(setq org-directory (if (amb/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
+;; (defun org-file-path (filename)
+;;   "Return the absolute address of an org file, given its relative name."
+;;   (concat (file-name-as-directory org-directory) filename))
 
-(defun org-file-path (filename)
-  "Return the absolute address of an org file, given its relative name."
-  (concat (file-name-as-directory org-directory) filename))
+;; (setq org-inbox-file (org-file-path "inbox.org"))
+;; (setq org-archive-location
+;;       (concat
+;;        (org-file-path (format "archive/archive-%s.org" (format-time-string "%Y")))
+;;        "::* From %s"))
 
-(setq org-inbox-file (org-file-path "inbox.org"))
-(setq org-archive-location
-      (concat
-       (org-file-path (format "archive/archive-%s.org" (format-time-string "%Y")))
-       "::* From %s"))
+;; (setq org-refile-targets '((org-inbox-file :level.1)
+;;                            ((org-file-path "work.org") :level.1)))
 
-(setq org-refile-targets '((org-inbox-file :level . 1)
-                           ((org-file-path "work-tickets.org") :level . 1)))
+;; (setq org-agenda-files (list org-inbox-file
+;;                              (org-file-path "work.org")))
 
-(setq org-agenda-files (list org-inbox-file
-                             (org-file-path "work-tickets.org")))
+;; ;; set exporting to a specific directory
+;; ;; https://stackoverflow.com/a/47850858
+;; (defun org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
+;;   (unless pub-dir
+;;     (setq pub-dir (concat (file-name-as-directory org-directory) "exported-org-files"))
+;;     (unless (file-directory-p pub-dir)
+;;       (make-directory pub-dir)))
+;;   (apply orig-fun extension subtreep pub-dir nil))
+;; (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
 
 ;; record when a task is marked DONE
 (setq org-log-done 'time)
 
 ;; don't allow a parent task to go to DONE items unless all children are DONE as well
 (setq org-enforce-todo-dependencies t)
-
-;; set exporting to a specific directory
-;; https://stackoverflow.com/a/47850858
-(defun org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
-  (unless pub-dir
-    (setq pub-dir (concat (file-name-as-directory org-directory) "exported-org-files"))
-    (unless (file-directory-p pub-dir)
-      (make-directory pub-dir)))
-  (apply orig-fun extension subtreep pub-dir nil))
-(advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
 
 ;; open a file in the defined `org-directory` var
 (global-set-key (kbd "C-x f") ;; previously `set-fill-column`
@@ -371,6 +392,40 @@
                    (interactive)
                    (org-time-stamp-inactive (format-time-string "%H:%m"))))
 
+
+
+;; set the ORG-DIRECTORY var based on the host OS
+(setq org-directory (if (amb/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
+
+;; set the GTD-DIRECTORY var based on ORG-DIRECTORY
+(setq gtd-directory (concat (file-name-as-directory org-directory) "gtd"))
+
+
+(defun gtd-file-path (filename)
+  "Return the absolute address of a gtd file, given its relative name."
+  (concat (file-name-as-directory gtd-directory) filename))
+
+(setq inbox-file (gtd-file-path "inbox.org"))
+(setq gtd-file (gtd-file-path "gtd.org"))
+(setq tickler-file (gtd-file-path "tickler.org"))
+(setq someday-file (gtd-file-path "someday.org"))
+
+(setq org-agenda-files '(inbox-file gtd-file tickler-file))
+
+(setq org-capture-templates '(("t" "Todo [inbox]" entry
+                               (file+headline inbox-file "Tasks")
+                               "* TODO %i%? \n %U")
+                              ("T" "Tickler" entry
+                               (file+headline tickler-file "Tickler")
+                               "* %i%? \n %U")))
+
+(setq org-refile-targets '((gtd-file :maxlevel . 2)
+                           (someday-file :maxlevel . 2)
+                           (tickler-file :maxlevel . 2)))
+
+(setq org-refile-allow-creating-parent-nodes t)
+(setq org-refile-use-outline-path "file")
+
 ;;;;
 ;; FIXME! Things to address later.
 ;;;;
@@ -378,8 +433,6 @@
 ;; FIXME: set up some golang functionality
 ;;        https://github.com/hrs/dotfiles/blob/main/emacs/dot-emacs.d/configuration.org#golang
 ;; FIXME: set up some Python functionality
-;; FIXME: convert all package installations to use `use-package`
-;;        https://github.com/jwiegley/use-package
 ;; FIXME: Emacs C Source initialization doesn't seem to work when i set the directory
 ;;        Emacs var: `source-directory`
 ;; FIXME: write something that will set the default file coding to utf-8
