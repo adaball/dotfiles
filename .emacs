@@ -161,7 +161,6 @@
   :ensure t)
 
 (use-package evil
-  :after (undo-tree)
   :bind (("C-h" . evil-window-left)
          ("C-l" . evil-window-right)
          ("C-j" . evil-window-down)
@@ -184,6 +183,15 @@
     (evil-define-key 'normal package-menu-mode-map (kbd "u") #'package-menu-mark-unmark)
     (evil-define-key 'normal package-menu-mode-map (kbd "x") #'package-menu-execute))
   :demand t
+  :ensure t)
+
+(use-package evil-org
+  :config
+  (add-hook 'org-mode-hook 'evil-org-mode)
+  (add-hook 'evil-org-mode-hook
+            (lambda () (evil-org-set-key-theme)))
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys)
   :ensure t)
 
 (use-package json-mode
@@ -245,8 +253,11 @@
 
 (require 'uniquify)
 
+(setq uniquify-buffer-name-style 'forward)
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
 (add-hook 'ielm-mode-hook #'eldoc-mode)
+(add-hook 'org-mode (lambda () (visual-line-mode 1)))
+
 
 ;;;;
 ;; emacs general / ui settings
@@ -381,9 +392,9 @@
                    (find-file
                     (read-file-name "Org file: "
                                     ;; make sure it ends in a "/"
-                                    (if (string= "/" (substring org-directory -1))
-                                        org-directory
-                                      (concat org-directory "/"))))))
+                                    (if (string= "/" (substring gtd-directory -1))
+                                        gtd-directory
+                                      (concat gtd-directory "/"))))))
 
 ;; insert an inactive org time stamp
 (global-set-key (kbd "C-x t") ;; not previously bound AFAICT
@@ -399,28 +410,54 @@
 ;; set the GTD-DIRECTORY var based on ORG-DIRECTORY
 (setq gtd-directory (concat (file-name-as-directory org-directory) "gtd"))
 
-
 (defun gtd-file-path (filename)
   "Return the absolute address of a gtd file, given its relative name."
   (concat (file-name-as-directory gtd-directory) filename))
 
+;; gtd org files
 (setq inbox-file (gtd-file-path "inbox.org"))
-(setq gtd-file (gtd-file-path "gtd.org"))
-(setq tickler-file (gtd-file-path "tickler.org"))
+(setq next-actions-file (gtd-file-path "next-actions.org"))
+(setq projects-file (gtd-file-path "projects.org"))
+(setq reference-file (gtd-file-path "reference.org"))
 (setq someday-file (gtd-file-path "someday.org"))
+(setq trash-file (gtd-file-path "trash.org"))
+(setq waiting-file (gtd-file-path "waiting.org"))
 
-(setq org-agenda-files '(inbox-file gtd-file tickler-file))
 
-(setq org-capture-templates '(("t" "Todo [inbox]" entry
-                               (file+headline inbox-file "Tasks")
-                               "* TODO %i%? \n %U")
-                              ("T" "Tickler" entry
-                               (file+headline tickler-file "Tickler")
-                               "* %i%? \n %U")))
+(setq org-archive-location
+      (concat
+       (gtd-file-path (format "archive-%s.org" (format-time-string "%Y")))
+       "::* From %s"))
 
-(setq org-refile-targets '((gtd-file :maxlevel . 2)
-                           (someday-file :maxlevel . 2)
-                           (tickler-file :maxlevel . 2)))
+(setq org-agenda-files (list 
+                        inbox-file 
+                        next-actions-file 
+                        projects-file 
+                        reference-file 
+                        someday-file 
+                        trash-file 
+                        waiting-file))
+
+(setq org-capture-templates '(("i" "inbox" entry (file+headline inbox-file "Inbox")
+                               "* TODO %i%? \n  %U")
+                              ("n" "Next Actions" entry (file+headline next-actions-file "Next Actions")
+                               "* TODO %i%? \n  %U")
+                              ("p" "Projects" entry (file+headline projects-file "Projects")
+                               "* TODO %i%? \n  %U")
+                              ("s" "Someday" entry (file+headline someday-file "Someday")
+                               "* TODO %i%? \n  %U")
+                              ("w" "Waiting" entry (file+headline waiting-file "Waiting")
+                               "* TODO %i%? \n  %U")))
+
+(setq org-refile-targets '(
+                           (inbox-file :maxlevel . 1)
+                           (next-actions-file :maxlevel . 1)
+                           (projects-file :maxlevel . 1)
+                           (reference-file :maxlevel . 1)
+                           (someday-file :maxlevel . 1)
+                           (trash-file :maxlevel . 1)
+                           (waiting-file :maxlevel . 1)
+                           ))
 
 (setq org-refile-allow-creating-parent-nodes t)
 (setq org-refile-use-outline-path "file")
@@ -447,3 +484,5 @@
 ;; FIXME: figure out how to make the FIND-DONE prefix argument the default when arching org subtress (i.e. only ever archive DONE items)
 ;; FIXME: the evil bindings (and all bindings in general) seem to be messed up when using the terminal
 ;;        for instance, I was unable to use `M-x b` to toggle buffers while in a terminal
+;; FIXME: linking a subtree to another subtree (e.g. refile-copy from projects to next actions, but 
+;;        having a link to the project from the next actions file)
