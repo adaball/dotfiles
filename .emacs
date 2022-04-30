@@ -60,8 +60,13 @@
 
 (defun amb/set-font-height (h)
   "Interactively change font height attribute"
-  (interactive "sEnter new height: ")
-  (set-face-attribute 'default nil :height (if (eq (type-of h) 'string) (string-to-number h) h)))
+  (interactive (let ((new-height (read-number "Enter new height: " (amb/cur-font-height))))
+                 (list new-height)))
+  (set-face-attribute 'default nil :height h))
+
+(defun amb/cur-font-height ()
+  "Return the current font height value"
+  (cdr (seq-first (seq-filter (lambda (v) (eq :height (car v))) (face-all-attributes 'default)))))
 
 (defun amb/is-windows-p ()
   "Confirm if the running OS is Windows"
