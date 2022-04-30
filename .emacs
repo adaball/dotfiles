@@ -204,12 +204,110 @@
   (add-to-list 'auto-mode-alist '("\\.json$" . json-mode))
   :ensure t)
 
+(use-package lispy
+  :ensure t)
+
 (use-package magit
   :bind ("C-c g" . magit-status)
   :ensure t)
 
 (use-package markdown-mode
   :ensure t)
+
+(use-package org
+  :config
+  ;; global org capture
+  (global-set-key (kbd "C-c c") #'org-capture)
+
+  ;; open a file in the defined `org-directory` var
+  (global-set-key (kbd "C-x f") ;; previously `set-fill-column`
+                  '(lambda ()
+                     (interactive)
+                     (find-file
+                      (read-file-name "Org file: "
+                                      ;; make sure it ends in a "/"
+                                      (if (string= "/" (substring gtd-directory -1))
+                                          gtd-directory
+                                        (concat gtd-directory "/"))))))
+
+  ;; insert an inactive org time stamp
+  (global-set-key (kbd "C-x t") ;; not previously bound AFAICT
+                  '(lambda ()
+                     (interactive)
+                     (org-time-stamp-inactive (format-time-string "%H:%m"))))
+
+  (defun org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
+    "Set org exporting to a specified directory (https://stackoverflow.com/a/47850858)"
+    (unless pub-dir
+      (setq pub-dir (concat (file-name-as-directory org-directory) "exported-org-files"))
+      (unless (file-directory-p pub-dir)
+        (make-directory pub-dir)))
+    (apply orig-fun extension subtreep pub-dir nil))
+
+  ;; export org files to a specific directory in ORG-DIRECTORY
+  (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
+
+  ;; record when a task is marked DONE
+  (setq org-log-done 'time)
+
+  ;; don't allow a parent task to go to DONE items unless all children are DONE as well
+  (setq org-enforce-todo-dependencies t)
+
+  ;; set the ORG-DIRECTORY var based on the host OS
+  (setq org-directory (if (amb/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
+
+  ;; set the GTD-DIRECTORY var based on ORG-DIRECTORY
+  (setq gtd-directory (concat (file-name-as-directory org-directory) "gtd"))
+
+  (defun gtd-file-path (filename)
+    "Given FILENAME, return the system specific GTD path to it"
+    (concat (file-name-as-directory gtd-directory) filename))
+
+  ;; gtd org files
+  (setq inbox-file (gtd-file-path "inbox.org"))
+  (setq next-actions-file (gtd-file-path "next-actions.org"))
+  (setq projects-file (gtd-file-path "projects.org"))
+  (setq reference-file (gtd-file-path "reference.org"))
+  (setq someday-file (gtd-file-path "someday.org"))
+  (setq trash-file (gtd-file-path "trash.org"))
+  (setq waiting-file (gtd-file-path "waiting.org"))
+
+  ;; set archive location in the gtd directory, based on YYYY
+  (setq org-archive-location
+        (concat
+         (gtd-file-path (format "archive-%s.org" (format-time-string "%Y")))
+         "::* From %s"))
+
+  (setq org-agenda-files (list
+                          inbox-file
+                          next-actions-file
+                          projects-file
+                          reference-file
+                          someday-file
+                          trash-file
+                          waiting-file))
+
+  (setq org-capture-templates '(("i" "Inbox" entry (file+headline inbox-file "Inbox")
+                                 "* TODO %i%? \n  %U")
+                                ("n" "Next Actions" entry (file+headline next-actions-file "Next Actions")
+                                 "* TODO %i%? \n  %U")
+                                ("p" "Projects" entry (file+headline projects-file "Projects")
+                                 "* TODO %i%? \n  %U")
+                                ("s" "Someday" entry (file+headline someday-file "Someday")
+                                 "* TODO %i%? \n  %U")
+                                ("w" "Waiting" entry (file+headline waiting-file "Waiting")
+                                 "* TODO %i%? \n  %U")))
+
+  (setq org-refile-targets '((inbox-file :maxlevel . 1)
+                             (next-actions-file :maxlevel . 1)
+                             (projects-file :maxlevel . 1)
+                             (reference-file :maxlevel . 1)
+                             (someday-file :maxlevel . 1)
+                             (trash-file :maxlevel . 1)
+                             (waiting-file :maxlevel . 1)))
+
+  (setq org-refile-allow-creating-parent-nodes t)
+  (setq org-refile-use-outline-path "file"))
 
 (use-package paredit
   :bind (:map paredit-mode-map
@@ -261,8 +359,6 @@
 (setq uniquify-buffer-name-style 'forward)
 (add-hook 'emacs-lisp-mode-hook #'eldoc-mode)
 (add-hook 'ielm-mode-hook #'eldoc-mode)
-(add-hook 'org-mode (lambda () (visual-line-mode 1)))
-
 
 ;;;;
 ;; emacs general / ui settings
@@ -325,7 +421,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(amb/set-font-height 140)
+(amb/set-font-height 120)
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -351,121 +447,6 @@
                 '(lambda ()
                    (interactive)
                    (popup-menu 'yank-menu)))
-
-(global-set-key (kbd "C-c c") #'org-capture)
-
-;;;;
-;; org-mode
-;;;;
-
-;; (defun org-file-path (filename)
-;;   "Return the absolute address of an org file, given its relative name."
-;;   (concat (file-name-as-directory org-directory) filename))
-
-;; (setq org-inbox-file (org-file-path "inbox.org"))
-;; (setq org-archive-location
-;;       (concat
-;;        (org-file-path (format "archive/archive-%s.org" (format-time-string "%Y")))
-;;        "::* From %s"))
-
-;; (setq org-refile-targets '((org-inbox-file :level.1)
-;;                            ((org-file-path "work.org") :level.1)))
-
-;; (setq org-agenda-files (list org-inbox-file
-;;                              (org-file-path "work.org")))
-
-;; ;; set exporting to a specific directory
-;; ;; https://stackoverflow.com/a/47850858
-;; (defun org-export-output-file-name-modified (orig-fun extension &optional subtreep pub-dir)
-;;   (unless pub-dir
-;;     (setq pub-dir (concat (file-name-as-directory org-directory) "exported-org-files"))
-;;     (unless (file-directory-p pub-dir)
-;;       (make-directory pub-dir)))
-;;   (apply orig-fun extension subtreep pub-dir nil))
-;; (advice-add 'org-export-output-file-name :around #'org-export-output-file-name-modified)
-
-;; record when a task is marked DONE
-(setq org-log-done 'time)
-
-;; don't allow a parent task to go to DONE items unless all children are DONE as well
-(setq org-enforce-todo-dependencies t)
-
-;; open a file in the defined `org-directory` var
-(global-set-key (kbd "C-x f") ;; previously `set-fill-column`
-                '(lambda ()
-                   (interactive)
-                   (find-file
-                    (read-file-name "Org file: "
-                                    ;; make sure it ends in a "/"
-                                    (if (string= "/" (substring gtd-directory -1))
-                                        gtd-directory
-                                      (concat gtd-directory "/"))))))
-
-;; insert an inactive org time stamp
-(global-set-key (kbd "C-x t") ;; not previously bound AFAICT
-                '(lambda ()
-                   (interactive)
-                   (org-time-stamp-inactive (format-time-string "%H:%m"))))
-
-
-
-;; set the ORG-DIRECTORY var based on the host OS
-(setq org-directory (if (amb/is-windows-p) "c:/Users/adam/Dropbox/org" "~/Dropbox/org"))
-
-;; set the GTD-DIRECTORY var based on ORG-DIRECTORY
-(setq gtd-directory (concat (file-name-as-directory org-directory) "gtd"))
-
-(defun gtd-file-path (filename)
-  "Return the absolute address of a gtd file, given its relative name."
-  (concat (file-name-as-directory gtd-directory) filename))
-
-;; gtd org files
-(setq inbox-file (gtd-file-path "inbox.org"))
-(setq next-actions-file (gtd-file-path "next-actions.org"))
-(setq projects-file (gtd-file-path "projects.org"))
-(setq reference-file (gtd-file-path "reference.org"))
-(setq someday-file (gtd-file-path "someday.org"))
-(setq trash-file (gtd-file-path "trash.org"))
-(setq waiting-file (gtd-file-path "waiting.org"))
-
-
-(setq org-archive-location
-      (concat
-       (gtd-file-path (format "archive-%s.org" (format-time-string "%Y")))
-       "::* From %s"))
-
-(setq org-agenda-files (list 
-                        inbox-file 
-                        next-actions-file 
-                        projects-file 
-                        reference-file 
-                        someday-file 
-                        trash-file 
-                        waiting-file))
-
-(setq org-capture-templates '(("i" "inbox" entry (file+headline inbox-file "Inbox")
-                               "* TODO %i%? \n  %U")
-                              ("n" "Next Actions" entry (file+headline next-actions-file "Next Actions")
-                               "* TODO %i%? \n  %U")
-                              ("p" "Projects" entry (file+headline projects-file "Projects")
-                               "* TODO %i%? \n  %U")
-                              ("s" "Someday" entry (file+headline someday-file "Someday")
-                               "* TODO %i%? \n  %U")
-                              ("w" "Waiting" entry (file+headline waiting-file "Waiting")
-                               "* TODO %i%? \n  %U")))
-
-(setq org-refile-targets '(
-                           (inbox-file :maxlevel . 1)
-                           (next-actions-file :maxlevel . 1)
-                           (projects-file :maxlevel . 1)
-                           (reference-file :maxlevel . 1)
-                           (someday-file :maxlevel . 1)
-                           (trash-file :maxlevel . 1)
-                           (waiting-file :maxlevel . 1)
-                           ))
-
-(setq org-refile-allow-creating-parent-nodes t)
-(setq org-refile-use-outline-path "file")
 
 ;;;;
 ;; FIXME! Things to address later.
