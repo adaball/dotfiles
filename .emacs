@@ -165,6 +165,21 @@
   (add-hook 'after-init-hook #'global-company-mode)
   :ensure t)
 
+(use-package elfeed
+  :config
+  (global-set-key (kbd "C-x w") 'elfeed)
+  (setq elfeed-feeds
+        '(("https://planet.emacslife.com/atom.xml" blog)
+          ("https://explainxkcd.com/rss.xml" comic)
+          ("https://xkcd.com/rss.xml" comic)
+          ("https://www.penny-arcade.com/feed" comic)
+          ("http://rss.slashdot.org/Slashdot/slashdotMain" news tech)
+          ("https://news.ycombinator.com/rss" news tech)
+          ("https://knowyourmeme.com/memes/submissions.rss" humor)
+          ("https://knowyourmeme.com/editorials.rss" humor)
+          ("http://feeds.bbci.co.uk/news/world/rss.xml" news)))
+  :ensure t)
+
 (use-package evil
   :bind (("C-h" . evil-window-left)
          ("C-l" . evil-window-right)
@@ -216,6 +231,9 @@
 
 (use-package org
   :config
+  ;; enable md exporting 
+  (require 'ox-md)
+
   ;; global org capture
   (global-set-key (kbd "C-c c") #'org-capture)
 
@@ -293,6 +311,8 @@
                                  "* TODO %i%? \n  %U")
                                 ("p" "Projects" entry (file+headline projects-file "Projects")
                                  "* TODO %i%? \n  %U")
+                                ("r" "Reference" entry (file+headline reference-file "Reference")
+                                 "* %i%? \n  %U")
                                 ("s" "Someday" entry (file+headline someday-file "Someday")
                                  "* TODO %i%? \n  %U")
                                 ("w" "Waiting" entry (file+headline waiting-file "Waiting")
@@ -364,8 +384,10 @@
 ;; emacs general / ui settings
 ;;;;
 
-;; don't use backup files
-(setq make-backup-files nil)
+;; load-path additions on work laptop
+(when (amb/is-macos-p) 
+  (add-to-list 'load-path "~/bin")
+  (add-to-list 'load-path "/usr/bin"))
 
 ;; set up the initial scratch buffer
 (setq initial-scratch-message nil)
@@ -421,7 +443,8 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(amb/set-font-height 120)
+(let ((size (if (amb/is-windows-p) 120 140)))
+  (amb/set-font-height size))
 
 ;; override custom file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -430,7 +453,9 @@
 (load custom-file)
 
 ;; use aspell
-(setq-default ispell-program-name "aspell")
+(if (amb/is-macos-p)
+    (add-to-list 'load-path "/opt/homebrew/bin/" t))
+(setq-default ispell-program-name "ispell")
 
 ;;;;
 ;; key bindings
