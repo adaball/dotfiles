@@ -76,8 +76,8 @@
   "Confirm if the running OS is macOS"
   (string= system-type "darwin"))
 
-(defun amb/url-escape-region (start end)
-  "URL escape the current selected text"
+(defun amb/url-un-escape-region (start end)
+  "URL un-escape the current selected text"
   (interactive "r")
   (if (eq nil 'url-unhex-string)
       (require 'url-util))
