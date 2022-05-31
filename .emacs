@@ -231,6 +231,9 @@
 
 (use-package org
   :config
+  ;; line wrapping
+  (add-hook 'org-mode-hook #'visual-line-mode)
+
   ;; enable md exporting 
   (require 'ox-md)
 
