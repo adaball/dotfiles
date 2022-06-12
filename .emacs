@@ -231,6 +231,14 @@
 
 (use-package org
   :config
+  ;; display tags in a more easy-on-the-eye way
+  ;; https://stackoverflow.com/a/60635933
+  (font-lock-add-keywords 'org-mode
+                          '(("^\\*+ "
+                             ":" nil nil
+                             (0 (put-text-property (match-beginning 0) (match-end 0) 'display " ")))))
+  (setq org-agenda-show-inherited-tags nil)
+
   ;; line wrapping
   (add-hook 'org-mode-hook #'visual-line-mode)
 
@@ -329,6 +337,7 @@
                              (trash-file :maxlevel . 1)
                              (waiting-file :maxlevel . 1)))
 
+  ;; when refiling create a parent node if there isn't one, use the file name as the outline path
   (setq org-refile-allow-creating-parent-nodes t)
   (setq org-refile-use-outline-path "file"))
 
@@ -475,6 +484,9 @@
                 '(lambda ()
                    (interactive)
                    (popup-menu 'yank-menu)))
+
+;; word count of the current buffer
+(global-set-key (kbd "C-x w") 'count-words)
 
 ;;;;
 ;; FIXME! Things to address later.
