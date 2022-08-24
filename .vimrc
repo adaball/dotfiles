@@ -12,7 +12,7 @@ set tabstop=2
 
 au BufNewFile,BufRead *.localbashrc setlocal ft=sh
 au BufNewFile,BufRead *Jenkinsfile* setlocal ft=groovy
-colorscheme elflord
+colorscheme desert
 
 let vimfiles_dir = $HOME . "/.vim/"
 
@@ -37,6 +37,7 @@ nmap <Leader>h :noh<CR>
 
 " quit window
 nmap <Leader>q :quit<CR>
+nmap <Leader>x :quit!<CR>
 
 " movement between panes, C-J|K|H|L
 nmap <C-J> <C-W>j
@@ -68,7 +69,8 @@ end
 " vim-flake8
 let g:flake8_show_in_gutter=1
 let g:flake8_show_in_file=1
-autocmd BufWritePost *.py call flake8#Flake8()
+" disabled - can be annoying if you're just browsing Python files
+" autocmd BufWritePost *.py call flake8#Flake8()
 
 " vim-slime
 let g:slime_target = "tmux"
