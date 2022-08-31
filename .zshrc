@@ -33,6 +33,10 @@ alias mv='mv -iv'
 alias rm='rm -iv'
 alias history='history 1'
 
+# useful aliases
+alias historyv='history | sort -r | vim -'
+alias ia='which wayback &>/dev/null && wayback --ia'
+
 # localized additions
 if [ -f ~/.localzshrc ]
 then
