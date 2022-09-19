@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+
+import time 
+import sys
+
+def convert(epoch):
+    local = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime(int(epoch)))
+    gmt = time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(int(epoch)))
+
+    return f"local:\t{local}\ngmt:\t{gmt}"
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("pass in a single epoch timestamp")
+        exit
+
+    print(convert(sys.argv[1]))
