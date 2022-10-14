@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+ethic = ['lawful', 'neutral', 'chaotic']
+moral = ['good', 'neutral', 'evil']
+
+r = Random.new
+
+e = ethic[r.rand(3)]
+m = moral[r.rand(3)]
+
+if e == m
+  e = 'true'
+  end
+
+puts "#{e.capitalize} #{m.capitalize}"
