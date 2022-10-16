@@ -1,5 +1,9 @@
 #!/usr/bin/bash
 
+set -e
+
+echo "begin dotfile update"
+
 mkdir -p ~/.vim \
   ~/.vim/autoload \
   ~/.vim/bundle \
@@ -11,25 +15,27 @@ mkdir -p ~/.vim \
 
 cp -iv ./.bashrc ~/
 cp -iv ./.emacs ~/
-cp -iv ./.vimrc ~/
 cp -iv ./.gitconfig ~/
-cp -iv ./.tmux.conf ~/
 cp -iv ./.mintty/themes/base16-brewer.minttyrc ~/.mintty/themes/
+cp -iv ./.tmux.conf ~/
+cp -iv ./.vimrc ~/
 
 pushd ~/.vim/autoload
-curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
+[[ -e ./pathogen.vim  ]] || curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
 popd
 
 pushd ~/.vim/bundle
-git clone git@github.com:MaxMEllon/vim-jsx-pretty.git # JSX support
-git clone git@github.com:fatih/vim-go.git # Golang support
-git clone git@github.com:guns/vim-clojure-static.git # Clojure support
-git clone git@github.com:leafgarland/typescript-vim.git # TypeScript syntax
-git clone git@github.com:nvie/vim-flake8.git # flake8 support
-git clone git@github.com:pangloss/vim-javascript.git # Javascript syntax and indentation
-git clone git@github.com:scrooloose/nerdtree.git # NerdTree
-git clone git@github.com:simpsonjulian/cypher-vim-syntax.git # Cypher syntax
-git clone git@github.com:tpope/vim-fireplace.git # Clojure nrepl support
-git clone git@github.com:tpope/vim-sensible.git # sensible Vim defaults
-git clone git@github.com:vim-scripts/sparql.vim.git # SPARQL syntax
+[[ -e ./cypher-vim-syntax ]] || git clone git@github.com:simpsonjulian/cypher-vim-syntax.git # Cypher syntax
+[[ -e ./nerdtree ]] || git clone git@github.com:scrooloose/nerdtree.git # NerdTree
+[[ -e ./sparql.vim ]] || git clone git@github.com:vim-scripts/sparql.vim.git # SPARQL syntax
+[[ -e ./typescript-vim ]] || git clone git@github.com:leafgarland/typescript-vim.git # TypeScript syntax
+[[ -e ./vim-clojure-static ]] || git clone git@github.com:guns/vim-clojure-static.git # Clojure support
+[[ -e ./vim-fireplace ]] || git clone git@github.com:tpope/vim-fireplace.git # Clojure nrepl support
+[[ -e ./vim-flake8 ]] || git clone git@github.com:nvie/vim-flake8.git # flake8 support
+[[ -e ./vim-go ]] || git clone git@github.com:fatih/vim-go.git # Golang support
+[[ -e ./vim-javascript ]] || git clone git@github.com:pangloss/vim-javascript.git # Javascript syntax and indentation
+[[ -e ./vim-jsx-pretty ]] || git clone git@github.com:MaxMEllon/vim-jsx-pretty.git # JSX support
+[[ -e ./vim-sensible ]] || git clone git@github.com:tpope/vim-sensible.git # sensible Vim defaults
 popd
+
+echo "dotfile update complete"
