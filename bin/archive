@@ -1,0 +1,61 @@
+#!/usr/bin/env python3
+"""A simple CLI script to quickly archive a website"""
+from datetime import datetime, timedelta, timezone
+import logging
+from math import floor
+import sys
+
+logging.basicConfig()
+logger = logging.getLogger("archive.py")
+logger.setLevel("INFO")
+
+DAY_IN_SECONDS = 86400
+
+try:
+    import waybackpy as wb
+except ImportError:
+    logger.exception('module "waybackpy" needs to be installed')
+    exit(1)
+
+
+def usage():
+    sys.stderr.write("A simple IA archiving script:\n\n")
+    sys.stderr.write("\tarchive.py <URL>\n\n")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) <= 1:
+        usage()
+        exit(1)
+
+    url = sys.argv[1]
+    logger.info("checking availability...")
+
+    try:
+        availability = wb.WaybackMachineAvailabilityAPI(url).newest()
+    except:
+        logger.exception("ia availability check failed")
+        exit(1)
+
+    # Assuming UTC due to the string "GMT" showing up on their UI when browsing capture dates
+    timestamp = availability.timestamp().astimezone(timezone.utc)
+
+    logger.info("returned timestamp %s", timestamp)
+
+    td = datetime.now().astimezone(timezone.utc) - timestamp
+
+    logger.info("snapshot is %d days old", td.days)
+
+    if td.days < 30:
+        logger.info("snapshot is less than a month old, not going to archive now.")
+        exit(0)
+
+    logger.info("archiving %s...", url)
+
+    try:
+        archived_url = wb.WaybackMachineSaveAPI(url).save()
+    except:
+        logger.exception("ia save failed")
+        exit(1)
+
+    logger.info("archive complete: %s", archived_url)
