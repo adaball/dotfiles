@@ -19,6 +19,7 @@ cp -iv ./.gitconfig ~/
 cp -iv ./.mintty/themes/base16-brewer.minttyrc ~/.mintty/themes/
 cp -iv ./.tmux.conf ~/
 cp -iv ./.vimrc ~/
+cp -iv ./bin/* ~/bin/
 
 pushd ~/.vim/autoload
 [[ -e ./pathogen.vim  ]] || curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
