@@ -1,6 +1,7 @@
 #!/usr/bin/bash
 
 set -e
+set -x
 
 echo "begin dotfile update"
 
@@ -13,6 +14,7 @@ mkdir -p ~/.vim \
   ~/.vim/.undo \
   ~/.mintty/themes
 
+cp -iv ./.profile ~/
 cp -iv ./.bashrc ~/
 cp -iv ./.emacs ~/
 cp -iv ./.gitconfig ~/

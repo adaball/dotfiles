@@ -34,7 +34,7 @@ alias rm='rm -iv'
 alias history='history 1'
 
 # useful aliases
-alias historyv='history | sort -r | vim -'
+alias hv='history | sort -r | vim -'
 alias ia='which wayback &>/dev/null && wayback --ia'
 
 # localized additions

@@ -11,6 +11,7 @@ set shiftwidth=2
 set tabstop=2
 
 au BufNewFile,BufRead *.localbashrc setlocal ft=sh
+au BufNewFile,BufRead *.localzshrc setlocal ft=zsh
 au BufNewFile,BufRead *Jenkinsfile* setlocal ft=groovy
 colorscheme desert
 
