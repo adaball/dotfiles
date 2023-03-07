@@ -1,3 +1,10 @@
+# Ensure .bashrc is loaded
+if [ "$BASH" ]; then
+  if [ -f ~/.bashrc ]; then
+    . ~/.bashrc
+  fi
+fi
+
 # Ensure tmux and others who use interactive login shells actually load .bashrc.
 # The reasoning is a bit confusing, but is detailed here:
 #
