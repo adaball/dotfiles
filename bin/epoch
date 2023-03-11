@@ -1,17 +1,42 @@
 #!/usr/bin/env python
 
-import time 
+import time
 import sys
 
-def convert(epoch):
+
+def print_current_time():
+    local = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
+    gmt = time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime())
+
+    print(f"local:\t{local}\ngmt:\t{gmt}")
+
+
+def print_given_time(epoch):
     local = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime(int(epoch)))
     gmt = time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(int(epoch)))
 
-    return f"local:\t{local}\ngmt:\t{gmt}"
+    print(f"local:\t{local}\ngmt:\t{gmt}")
+
+
+def usage():
+    print(
+        """Usage:
+    epoch <epoch integer>
+        Converts an epoch integer into both local and GMT timestamps
+
+    epoch
+        Outputs the current epoch timestamp in integer, local, and GMT formats
+    """
+    )
+
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("pass in a single epoch timestamp")
-        exit
+    args = sys.argv[1:]
+    args_len = len(args)
 
-    print(convert(sys.argv[1]))
+    if args_len == 0:
+        print_current_time()
+    elif args_len == 1:
+        print_given_time(args[0])
+    else:
+        usage()
