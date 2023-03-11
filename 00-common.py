@@ -8,6 +8,9 @@ def print_bytes(b: bytes, encoding: str = "utf-8") -> None:
     if not isinstance(b, bytes):
         raise ValueError()
 
+    if not isinstance(encoding, str):
+        raise ValueError()
+
     print(str(b, encoding=encoding))
 
 
