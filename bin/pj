@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+pbpaste | jq . | vim -c "set ft=json" -
