@@ -41,6 +41,7 @@ pushd ~/.vim/bundle
 [[ -e ./vim-javascript ]] || git clone git@github.com:pangloss/vim-javascript.git # Javascript syntax and indentation
 [[ -e ./vim-jsx-pretty ]] || git clone git@github.com:MaxMEllon/vim-jsx-pretty.git # JSX support
 [[ -e ./vim-sensible ]] || git clone git@github.com:tpope/vim-sensible.git # sensible Vim defaults
+[[ -e ./vim-tmux-navigator ]] || git clone git@github.com:christoomey/vim-tmux-navigator.git # seamless tmux + vim navigation
 popd
 
 echo "dotfile update complete"
