@@ -22,6 +22,7 @@ cp -iv ./.mintty/themes/base16-brewer.minttyrc ~/.mintty/themes/
 cp -iv ./.tmux.conf ~/
 cp -iv ./.vimrc ~/
 cp -iv ./bin/* ~/bin/
+cp -iv ./.vim/colors/*.vim ~/.vim/colors/
 
 [[ -d ~/.ipython/profile_default/startup ]] && cp -iv "./00-common.py" ~/.ipython/profile_default/startup/
 
