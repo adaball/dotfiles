@@ -13,7 +13,6 @@ set tabstop=2
 au BufNewFile,BufRead *.localbashrc setlocal ft=sh
 au BufNewFile,BufRead *.localzshrc setlocal ft=zsh
 au BufNewFile,BufRead *Jenkinsfile* setlocal ft=groovy
-colorscheme desert
 
 let vimfiles_dir = $HOME . "/.vim/"
 
@@ -27,7 +26,13 @@ let &directory = vimfiles_dir . '.swap'
 let &dir = &directory
 
 if has('gui_running')
-  set guifont=Consolas:h14
+  set guifont=Monaco:h16
+  colorscheme base16-monokai
+
+  set guicursor=n-v-c-i:block-Cursor
+  set guicursor+=n-v-c-i:blinkon0
+else
+  colorscheme default
 endif
 
 " change <Leader>
@@ -36,9 +41,15 @@ let mapleader = ","
 " disable highlight for searches
 nmap <Leader>h :noh<CR>
 
+" grep
+nmap <Leader>g :lv
+nmap <Leader>n :lne<CR>
+nmap <Leader>p :lp<CR>
+
 " quit window
 nmap <Leader>q :quit<CR>
 nmap <Leader>x :quit!<CR>
+nmap <Leader>w :write<CR>
 
 " movement between panes, C-J|K|H|L
 nmap <C-J> <C-W>j
@@ -53,6 +64,7 @@ inoremap <S-Tab> <C-V><Tab>
 map <C-N> :NERDTreeToggle<CR>
 map <Leader><C-F> :NERDTreeFind<CR>
 let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\.DS_Store$[[file]]']
 
 " Mouse
 set mouse=a
@@ -60,11 +72,6 @@ if has("mouse_sgr")
     set ttymouse=sgr
 else
     set ttymouse=xterm2
-end
-
-" pbcopy for macOS
-if has('mac')
-  map <F2> :.w !pbcopy<CR>
 end
 
 " vim-flake8
@@ -84,7 +91,13 @@ function! CommandIntoBuffer()
   let cmd = input('enter command: ')
   call inputrestore()
 
-  execute "new | 0read ! " . cmd
+  botright new
+  setlocal buftype=nofile bufhidden=wipe nobuflisted noswapfile nowrap
+
+  execute "0read ! " . cmd
+
+  setlocal nomodifiable
+  1
 endfunction
 map <Leader>c :call CommandIntoBuffer()<CR>
 
@@ -97,6 +110,7 @@ endfunction
 command! -range Vis normal! <line1>GV<line2>G
 
 " vim-go
+nmap <Leader>b :GoBuild<CR>
 let g:go_highlight_extra_types = 1
 let g:go_highlight_space_tab_error = 1
 let g:go_highlight_trailing_whitespace_error = 1
@@ -108,3 +122,11 @@ let g:go_highlight_types = 1
 let g:go_highlight_fields = 1
 let g:go_highlight_variable_declarations = 1
 let g:go_highlight_variable_assignments = 1
+
+" vim-fzf
+set rtp+=~/.fzf
+
+map <Leader>f :Files <CR>
+
+" for reading particularly nasty JSON files
+set maxmempattern=2000000
