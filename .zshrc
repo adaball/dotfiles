@@ -28,9 +28,12 @@ setopt interactivecomments
 
 # reasonable defaults
 alias cp='cp -iv'
-alias ll='ls -lah'
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
 alias mv='mv -iv'
 alias rm='rm -iv'
+
+alias ll='ls -lah'
 alias history='history 1'
 
 # useful aliases
