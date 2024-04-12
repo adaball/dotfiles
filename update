@@ -4,7 +4,9 @@ set -x
 
 echo "begin dotfile update"
 
-mkdir -p ~/.vim \
+mkdir -p \
+  ~/.config/adaball \
+  ~/.vim \
   ~/.vim/autoload \
   ~/.vim/bundle \
   ~/.vim/colors \
@@ -13,16 +15,16 @@ mkdir -p ~/.vim \
   ~/.vim/.undo \
   ~/.mintty/themes
 
-cp -iv ./.profile ~/
-cp -iv ./.zshrc ~/
-cp -iv ./.bashrc ~/
+cp -iv ./.base_bashrc ~/.config/adaball/
 cp -iv ./.emacs ~/
 cp -iv ./.gitconfig ~/
 cp -iv ./.mintty/themes/base16-brewer.minttyrc ~/.mintty/themes/
+cp -iv ./.profile ~/
 cp -iv ./.tmux.conf ~/
-cp -iv ./.vimrc ~/
-cp -iv ./bin/* ~/bin/
 cp -iv ./.vim/colors/*.vim ~/.vim/colors/
+cp -iv ./.vimrc ~/
+cp -iv ./.zshrc ~/
+cp -iv ./bin/* ~/bin/
 
 [[ -d ~/.ipython/profile_default/startup ]] && cp -iv "./00-common.py" ~/.ipython/profile_default/startup/
 
@@ -31,9 +33,7 @@ pushd ~/.vim/autoload
 popd
 
 pushd ~/.vim/bundle
-[[ -e ./cypher-vim-syntax ]] || git clone git@github.com:simpsonjulian/cypher-vim-syntax.git # Cypher syntax
 [[ -e ./nerdtree ]] || git clone git@github.com:scrooloose/nerdtree.git # NerdTree
-[[ -e ./sparql.vim ]] || git clone git@github.com:vim-scripts/sparql.vim.git # SPARQL syntax
 [[ -e ./typescript-vim ]] || git clone git@github.com:leafgarland/typescript-vim.git # TypeScript syntax
 [[ -e ./vim-clojure-static ]] || git clone git@github.com:guns/vim-clojure-static.git # Clojure support
 [[ -e ./vim-fireplace ]] || git clone git@github.com:tpope/vim-fireplace.git # Clojure nrepl support

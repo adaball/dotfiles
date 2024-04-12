@@ -27,9 +27,3 @@ alias ll='ls -lah'
 
 # look and feel
 export PS1='\[\e[1;34m\] \w\[\e[1;37m\] $ '
-
-# system specific modifications
-if [ -f ~/.localbashrc ]
-then
-  source ~/.localbashrc
-fi
