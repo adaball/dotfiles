@@ -1,18 +1,34 @@
+# If not running interactively, don't do anything
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+# use vim where possible
 EDITOR=vim
 VISUAL=vim
-shopt -s histappend
-shopt -s checkwinsize
 
+shopt -s histappend   # append to the history file, don't overwrite it
+shopt -s checkwinsize # update lines/columns based on window size
+
+# don't limit history storage
+HISTSIZE=-1
+HISTFILESIZE=-1
+
+# reasonable defaults
 alias cp='cp -iv'
-alias ls='ls --color=auto'
+alias ls='ls --color=auto --group-directories-first'
 alias grep='grep --color=auto'
 alias mv='mv -iv'
 alias rm='rm -iv'
 
+# custom commands
 alias ll='ls -lah'
 
+# look and feel
 export PS1='\[\e[1;34m\] \w\[\e[1;37m\] $ '
 
+# system specific modifications
 if [ -f ~/.localbashrc ]
 then
   source ~/.localbashrc
