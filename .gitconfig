@@ -3,8 +3,8 @@
 [push]
   default = simple
 [user]
-  email = etc@adamball.org
-  name = Adam Ball
+  email = ada@adamball.org
+  name = Ada Ball
 [pull]
   ff = only
 [alias]
