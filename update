@@ -27,6 +27,7 @@ cp -iv ./.zshrc ~/
 cp -iv ./bin/* ~/bin/
 
 [[ -d ~/.ipython/profile_default/startup ]] && cp -iv "./00-common.py" ~/.ipython/profile_default/startup/
+[[ -d ~/.ipython/profile_default/ ]] && cp -iv "./ipython_config.py" ~/.ipython/profile_default/
 
 pushd ~/.vim/autoload
 [[ -e ./pathogen.vim  ]] || curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
