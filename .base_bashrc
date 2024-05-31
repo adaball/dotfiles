@@ -5,15 +5,16 @@ case $- in
 esac
 
 # use vim where possible
-EDITOR=vim
-VISUAL=vim
+export SUDO_EDITOR=vim
+export EDITOR=vim
+export VISUAL=vim
 
 shopt -s histappend   # append to the history file, don't overwrite it
 shopt -s checkwinsize # update lines/columns based on window size
 
 # don't limit history storage
-HISTSIZE=-1
-HISTFILESIZE=-1
+export HISTSIZE=-1
+export HISTFILESIZE=-1
 
 # reasonable defaults
 alias cp='cp -iv'
