@@ -5,15 +5,15 @@ import sys
 
 
 def print_current_time():
-    local = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
-    gmt = time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime())
+    local = time.strftime("%c", time.localtime())
+    gmt = time.strftime("%c", time.gmtime())
 
     print(f"local:\t{local}\ngmt:\t{gmt}")
 
 
 def print_given_time(epoch):
-    local = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime(int(epoch)))
-    gmt = time.strftime("%a, %d %b %Y %H:%M:%S", time.gmtime(int(epoch)))
+    local = time.strftime("%c", time.localtime(int(epoch)))
+    gmt = time.strftime("%c", time.gmtime(int(epoch)))
 
     print(f"local:\t{local}\ngmt:\t{gmt}")
 
