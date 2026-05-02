@@ -141,17 +141,22 @@
   :bind (("C-h" . evil-window-left)
          ("C-l" . evil-window-right)
          ("C-j" . evil-window-down)
-         ("C-k" . evil-window-up))
+         ("C-k" . evil-window-up)
+         ("C-d" . evil-scroll-down)
+         ("C-u" . evil-scroll-up))
   :config
   (require 'evil)
   (evil-mode 1)
   (add-hook 'package-menu-mode-hook #'turn-on-evil-mode)
   (evil-set-undo-system 'undo-tree)
   (evil-set-leader 'normal ",")
+  (global-unset-key (kbd "M-v"))
 
   (evil-define-key 'normal 'global (kbd "<leader>w") 'save-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>q") 'kill-buffer)
   (evil-define-key 'normal 'global (kbd "C-S-h") 'help)
+  (evil-define-key 'insert 'global (kbd "M-v") 'evil-paste-after)
+
   :demand t
   :ensure t)
 
@@ -159,6 +164,7 @@
   :config
   (global-set-key (kbd "C-c c") #'org-capture)
   (global-set-key (kbd "C-c a") #'org-agenda)
+  (global-set-key (kbd "C-<tab>") #'org-cycle)
   (setq org-directory "~/Documents/org")
   (setq gtd-file (concat (file-name-as-directory org-directory) "gtd.org"))
   (setq org-agenda-files (list gtd-file))
@@ -173,6 +179,9 @@
 (use-package undo-tree
   :config
   (global-undo-tree-mode)
+  :ensure t)
+
+(use-package markdown-mode
   :ensure t)
 
 ;;;;
@@ -239,7 +248,7 @@
 (setq-default frame-title-format "%b (%f)")
 
 ;; set default font height
-(let ((size (if (amb/is-windows-p) 120 140)))
+(let ((size (if (amb/is-windows-p) 140 160)))
   (amb/set-font-height size))
 
 ;; override custom file
@@ -255,6 +264,7 @@
 ;; key bindings
 ;;;;
 
+
 ;; fix format of buffer
 (global-set-key (kbd "C-c f") 'amb/fix-format-in-buffer)
 
@@ -269,4 +279,8 @@
 
 ;; word count of the current buffer
 (global-set-key (kbd "C-x w") 'count-words)
+
+;; unsets
+;; keymap-global-unset
+;; keymap-global-set
 
