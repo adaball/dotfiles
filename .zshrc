@@ -49,7 +49,7 @@ alias youtube-dl='yt-dlp'
 alias zconf='vim ~/.zshrc'
 
 # PATH
-export PATH="/Users/adam/bin:${PATH}"
+export PATH="${HOME}/bin:${PATH}"
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
