@@ -10,14 +10,11 @@ set nu
 set shiftwidth=4
 set tabstop=4
 
-au BufNewFile,BufRead *.localbashrc setlocal ft=sh
-au BufNewFile,BufRead *.localzshrc setlocal ft=zsh
-au BufNewFile,BufRead *Jenkinsfile* setlocal ft=groovy
-
-let vimfiles_dir = $HOME . "/.vim/"
-
+" set vimfiles directory
 if has('win32') || has('win64')
   let vimfiles_dir = $HOME . '\vimfiles\'
+else
+  let vimfiles_dir = $HOME . "/.vim/"
 endif
 
 " put undo/backup/swap files under main vim directory
@@ -26,6 +23,10 @@ let &backupdir = vimfiles_dir . '.backup'
 let &directory = vimfiles_dir . '.swap'
 let &dir = &directory
 
+" needed for colorschemes in the terminal
+set termguicolors
+
+" set colorscheme and some other things for the gui
 if has('gui_running')
   set guifont=Monaco:h16
   colorscheme base16-monokai
@@ -33,7 +34,7 @@ if has('gui_running')
   set guicursor=n-v-c-i:block-Cursor
   set guicursor+=n-v-c-i:blinkon0
 else
-  colorscheme default
+  colorscheme catppuccin_mocha
 endif
 
 " change <Leader>
@@ -42,15 +43,13 @@ let mapleader = ","
 " disable highlight for searches
 nmap <Leader>h :noh<CR>
 
-" grep
-nmap <Leader>g :lv
-nmap <Leader>n :lne<CR>
-nmap <Leader>p :lp<CR>
-
-" quit window
+" window management
 nmap <Leader>q :quit<CR>
 nmap <Leader>x :quit!<CR>
 nmap <Leader>w :write<CR>
+
+" redo
+nmap <Leader>r :redo<CR>
 
 " movement between panes, C-J|K|H|L
 nmap <C-J> <C-W>j
@@ -96,10 +95,8 @@ function! SpellCheck()
   setlocal spell spelllang=en_us
 endfunction
 
-" vim-fzf
-set rtp+=~/.fzf
-
-map <Leader>f :Files <CR>
+" disable recording with q
+map q <Nop>
 
 " for reading particularly nasty JSON files
 set maxmempattern=2000000
