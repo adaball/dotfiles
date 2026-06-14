@@ -34,6 +34,7 @@ setopt interactivecomments
 alias ch=':>$HISTFILE && exec $SHELL'
 alias convert='magick'
 alias cp='cp -iv'
+alias dps="docker ps --format '{{.Names}}\n{{.State}} ({{.Status}})\n{{.Ports}}\n{{.Image}}\n---'"
 alias ffmpeg='ffmpeg -hide_banner'
 alias ffprobe='ffprobe -hide_banner'
 alias grep='grep --color=auto'
