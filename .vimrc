@@ -62,7 +62,7 @@ inoremap <S-Tab> <C-V><Tab>
 
 " NERDTree
 map <C-N> :NERDTreeToggle<CR>
-map <Leader><C-F> :NERDTreeFind<CR>
+map <Leader>f :NERDTreeFind<CR>
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.DS_Store$[[file]]']
 
@@ -100,3 +100,6 @@ map q <Nop>
 
 " for reading particularly nasty JSON files
 set maxmempattern=2000000
+
+" NOTES:
+" - s/\v<(.)(\w*)/\u\1\L\2/g - capitalize every word on a line
