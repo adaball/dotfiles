@@ -52,6 +52,7 @@ alias zconf='vim ~/.zshrc'
 export PATH="${HOME}/bin:${PATH}"
 
 # fzf
+export FZF_DEFAULT_COMMAND='fd --type f --strip-cwd-prefix --hidden --follow --exclude .git'
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # nvm
