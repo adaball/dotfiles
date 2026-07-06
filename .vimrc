@@ -72,7 +72,7 @@ inoremap <S-Tab> <C-V><Tab>
 
 " NERDTree
 map <C-N> :NERDTreeToggle<CR>
-map <Leader>f :NERDTreeFind<CR>
+map <Leader>nf :NERDTreeFind<CR>
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.DS_Store$[[file]]']
 
@@ -113,6 +113,8 @@ set maxmempattern=2000000
 
 " fzf
 set rtp+=/opt/homebrew/opt/fzf
+nmap <Leader>f :Files<CR>
+nmap <Leader>gf :GFiles<CR>
 
 " NOTES:
 " - s/\v<(.)(\w*)/\u\1\L\2/g - capitalize every word on a line
