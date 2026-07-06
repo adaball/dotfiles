@@ -30,8 +30,12 @@ cp -iv ./bin/* ~/bin/
 [[ -d ~/.ipython/profile_default/ ]] && cp -iv "./ipython_config.py" ~/.ipython/profile_default/
 
 pushd ~/.vim/pack/plugins/start
+[[ -e ./fzf ]] || ( mkdir fzf && curl -L "https://raw.githubusercontent.com/junegunn/fzf/refs/heads/master/plugin/fzf.vim" -o ./fzf/fzf.vim ) # official fzf plugin
+[[ -e ./fzf.vim ]] || git clone git@github.com:junegunn/fzf.vim.git # further fzf integration
+echo "ensure fzf.vim dependencies are met: brew install fzf bat ripgrep the_silver_searcher perl universal-ctags"
 [[ -e ./nerdtree ]] || git clone git@github.com:scrooloose/nerdtree.git # NerdTree
 [[ -e ./typescript-vim ]] || git clone git@github.com:leafgarland/typescript-vim.git # TypeScript syntax
+[[ -e ./vim-fugitive ]] || git clone git@github.com:tpope/vim-fugitive.git # Git support
 [[ -e ./vim-javascript ]] || git clone git@github.com:pangloss/vim-javascript.git # Javascript syntax and indentation
 [[ -e ./vim-sensible ]] || git clone git@github.com:tpope/vim-sensible.git # sensible Vim defaults
 [[ -e ./vim-tmux-navigator ]] || git clone git@github.com:christoomey/vim-tmux-navigator.git # seamless tmux + vim navigation

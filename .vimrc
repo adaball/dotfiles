@@ -1,5 +1,3 @@
-execute pathogen#infect()
-execute pathogen#helptags()
 syntax on
 filetype plugin indent on
 
@@ -51,11 +49,23 @@ nmap <Leader>w :write<CR>
 " redo
 nmap <Leader>r :redo<CR>
 
+" vim-fugitive (Git)
+nmap <Leader>gb :Git blame<CR>
+nmap <Leader>gs :Git status<CR>
+
+" buffers
+nmap <Leader>b :buffers<CR>
+nmap <Tab> :bnext!<CR>
+nmap <S-Tab> :bprev!<CR>
+
 " movement between panes, C-J|K|H|L
 nmap <C-J> <C-W>j
 nmap <C-K> <C-W>k
 nmap <C-H> <C-W>h
 nmap <C-L> <C-W>l
+
+" match without jumping to the next highlighted item
+nnoremap <silent> <leader>* :let @/ = '\V' . expand('<cword>')<CR>:set hlsearch<CR>
 
 " insert actual tab char when needed
 inoremap <S-Tab> <C-V><Tab>
@@ -101,5 +111,9 @@ map q <Nop>
 " for reading particularly nasty JSON files
 set maxmempattern=2000000
 
+" fzf
+set rtp+=/opt/homebrew/opt/fzf
+
 " NOTES:
 " - s/\v<(.)(\w*)/\u\1\L\2/g - capitalize every word on a line
+" - %bd|e# - close all buffers but the current one
