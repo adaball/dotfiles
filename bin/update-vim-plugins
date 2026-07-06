@@ -3,7 +3,7 @@
 set -x;
 set -e;
 
-pushd ~/.vim/bundle/;
+pushd ~/.vim/pack/plugins/start/;
 
 find . -maxdepth 1 -type d | grep -v "^\.$" | while read dir; do
   pushd $dir;

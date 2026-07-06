@@ -8,8 +8,7 @@ echo "begin dotfile update"
 mkdir -p \
   ~/.config/adaball \
   ~/.vim \
-  ~/.vim/autoload \
-  ~/.vim/bundle \
+  ~/.vim/pack/plugins/start \
   ~/.vim/colors \
   ~/.vim/.swap \
   ~/.vim/.backup \
@@ -30,11 +29,7 @@ cp -iv ./bin/* ~/bin/
 [[ -d ~/.ipython/profile_default/startup ]] && cp -iv "./00-common.py" ~/.ipython/profile_default/startup/
 [[ -d ~/.ipython/profile_default/ ]] && cp -iv "./ipython_config.py" ~/.ipython/profile_default/
 
-pushd ~/.vim/autoload
-[[ -e ./pathogen.vim  ]] || curl -LO "https://raw.githubusercontent.com/tpope/vim-pathogen/master/autoload/pathogen.vim"
-popd
-
-pushd ~/.vim/bundle
+pushd ~/.vim/pack/plugins/start
 [[ -e ./nerdtree ]] || git clone git@github.com:scrooloose/nerdtree.git # NerdTree
 [[ -e ./typescript-vim ]] || git clone git@github.com:leafgarland/typescript-vim.git # TypeScript syntax
 [[ -e ./vim-javascript ]] || git clone git@github.com:pangloss/vim-javascript.git # Javascript syntax and indentation
