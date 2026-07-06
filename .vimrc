@@ -54,7 +54,6 @@ nmap <Leader>gb :Git blame<CR>
 nmap <Leader>gs :Git status<CR>
 
 " buffers
-nmap <Leader>b :buffers<CR>
 nmap <Tab> :bnext!<CR>
 nmap <S-Tab> :bprev!<CR>
 
@@ -113,6 +112,7 @@ set maxmempattern=2000000
 
 " fzf
 set rtp+=/opt/homebrew/opt/fzf
+nmap <Leader>b :Buffers<CR>
 nmap <Leader>f :Files<CR>
 nmap <Leader>gf :GFiles<CR>
 
