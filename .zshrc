@@ -45,7 +45,6 @@ alias ls='ls --color=auto'
 alias mv='mv -iv'
 alias remove_quarantine='xattr -d com.apple.quarantine'
 alias rm='rm -iv'
-alias router='ssh ada@192.168.1.1 -p 41372'
 alias youtube-dl='yt-dlp'
 alias zconf='vim ~/.zshrc'
 
