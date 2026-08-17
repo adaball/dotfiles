@@ -7,8 +7,9 @@ import sys
 def print_current_time():
     local = time.strftime("%c", time.localtime())
     gmt = time.strftime("%c", time.gmtime())
+    epoch_int = int(time.time())
 
-    print(f"local:\t{local}\ngmt:\t{gmt}")
+    print(f"{epoch_int}\nlocal:\t{local}\ngmt:\t{gmt}")
 
 
 def print_given_time(epoch):
